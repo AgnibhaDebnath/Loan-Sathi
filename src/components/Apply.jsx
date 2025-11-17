@@ -10,6 +10,8 @@ import { Select, SelectGroup, SelectValue, SelectContent, SelectItem, SelectLabe
 import { Spinner } from "@/components/ui/spinner"
 const Apply = () => {
     const { isOpen, setIsOpen } = useContext(ModelContext);
+    const { Borrowerlogin, setBorrowerlogin } = useContext(ModelContext);
+
     const navigate = useNavigate();
 
     const [firstName, setFirstName] = useState("");
@@ -82,7 +84,7 @@ const Apply = () => {
                 setTimeout(() => {
                     setPopup(false);
                     setIsVerified(false);
-                    navigate('/MyLoanSection');
+                    setBorrowerlogin(true)
                 }, 3000);
             } else {
                 setIsOpen(true)
