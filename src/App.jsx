@@ -9,8 +9,10 @@ import { ModelProvider } from "./Contaxt/ModelContext"
 import Apply from "./components/Apply"
 import AdminDashboard from "./components/AdminDashBoard"
 import LoanApplications from "./components/LoanApplication"
-import MyLoansection from "./components/MyLoanSection"
 import AdminLogin from "./components/AdminLogin"
+import MyLoanHeader from "./components/MyLoanHeader"
+import LoanStatus from "./components/LoanStatus"
+import Borrowerlogin from "./components/BorrowerLogin"
 function App() {
   const Home = () => {
 
@@ -18,7 +20,6 @@ function App() {
     return (
 
       <>
-
         <Header></Header>
         <HeroSection></HeroSection>
         <About></About>
@@ -27,7 +28,7 @@ function App() {
         <Apply></Apply>
         <Contact></Contact>
         <AdminLogin></AdminLogin>
-
+        <Borrowerlogin></Borrowerlogin>
       </>
     )
   }
@@ -39,9 +40,12 @@ function App() {
       </>
     )
   }
-  const Borrower = () => {
+  const LoanStatusSection = () => {
     return (
-      <MyLoansection></MyLoansection>
+      <>
+        < MyLoanHeader></ MyLoanHeader>
+        <LoanStatus></LoanStatus>
+      </>
     )
   }
 
@@ -49,9 +53,9 @@ function App() {
     <>
       <ModelProvider>
         <Routes>
-          <Route path="/" element={< Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/MyLoansection" element={<Borrower />} />
+          <Route path="/LoanStatusSection" element={<LoanStatusSection />} />
         </Routes>
       </ModelProvider>
 
