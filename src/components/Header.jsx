@@ -48,7 +48,7 @@ const Header = () => {
     const { isOpen, setIsOpen } = useContext(ModelContext);
     const { LoginFormOpen, setLoginFormOpen } = useContext(ModelContext)
     const [isWideScreen, setIsWideScreen] = useState(window.innerWidth > 1000);
-
+    const { Borrowerlogin, setBorrowerlogin } = useContext(ModelContext)
     useEffect(() => {
         const handleResize = () => {
             setIsWideScreen(window.innerWidth > 1000);
@@ -96,7 +96,7 @@ const Header = () => {
                                                     </button>
                                                 case 'My Loan':
                                                     return <button key={link.id} onClick={() => {
-                                                        console.log("My loan clicked")
+                                                        setBorrowerlogin(!Borrowerlogin);
                                                     }
                                                     }>
                                                         {link.buttonName}
