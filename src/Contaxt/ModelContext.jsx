@@ -3,6 +3,7 @@ export const ModelContext = createContext();
 export const ModelProvider = ({ children }) => {
     const [isOpen, setIsOpen] = useState(false)
     const [LoginFormOpen, setLoginFormOpen] = useState(false)
+    const [Borrowerlogin, setBorrowerlogin] = useState(false)
 
     return (
         <ModelContext.Provider value={
@@ -10,7 +11,9 @@ export const ModelProvider = ({ children }) => {
                 isOpen,
                 setIsOpen,
                 LoginFormOpen,
-                setLoginFormOpen
+                setLoginFormOpen,
+                Borrowerlogin,
+                setBorrowerlogin
             }}
         >
             {children}
