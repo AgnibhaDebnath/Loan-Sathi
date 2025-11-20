@@ -10,6 +10,8 @@ const ProtectedRoute = ({ children }) => {
             if (user) {
                 setLogin(true)
                 setLoding(false)
+            } else {
+                setLoding(false)
             }
         })
         return () => unsuscribe()
