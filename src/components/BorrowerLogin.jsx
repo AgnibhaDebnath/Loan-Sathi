@@ -76,7 +76,7 @@ const Borrowerlogin = () => {
             console.log(exist)
 
             if (!exist) {
-                alert("Mobile no already registered")
+                alert("Mobile no is not registered")
                 setBorrowerlogin(true)
                 return;
             }
