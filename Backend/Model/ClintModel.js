@@ -30,5 +30,39 @@ const LoanFormSubmission = async (LoanData) => {
         throw err;
     }
 };
+const findBorrowerByPhone = async (MobileNo) => {
+    try {
+        
+        const [rows] = await connection.query("SELECT 1 FROM loan_application_data WHERE mobile_no = ? LIMIT 1", [MobileNo]);
+    if (rows.length > 0) {
+        return true
+    }
+    else {
+        return false
+        }
+    } catch (err) {
+        console.log("error")
+        throw err;
+        
+    }
+    
+}
+const loanDataForAuthUser = async (decoded) => {
 
-module.exports = { LoanFormSubmission };
+    try {
+     const phone = decoded.phone_number?.replace("+91", "");
+
+        if (!phone) {
+            throw new Error("Phone number not found in token");
+        } 
+        const [rows] = await connection.query("SELECT * FROM loan_application_data WHERE mobile_no = ? LIMIT 1", [phone]);
+        console.log(rows[0])
+        return rows.length > 0 ? rows[0] : null;
+    } catch (err) {
+        console.log("error")
+        throw err;
+        
+    }
+}
+
+module.exports = { LoanFormSubmission,findBorrowerByPhone,loanDataForAuthUser };
