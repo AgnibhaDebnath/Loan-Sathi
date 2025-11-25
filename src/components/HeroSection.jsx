@@ -3,7 +3,7 @@ import money from "../assets/heroSection.jpg"
 import { ArrowRight } from 'lucide-react';
 import { ModelContext } from "../Contaxt/ModelContext";
 import { useContext } from "react";
-import BlurText from "./BlurText";
+import BlurText from "./ui/BlurText";
 const HeroSection = () => {
     const { isOpen, setIsOpen } = useContext(ModelContext)
     return (
