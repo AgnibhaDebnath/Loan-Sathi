@@ -128,31 +128,44 @@ const Apply = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validate()) return;
-        setupRecaptcha();
-        setIsOpen(!isOpen);
-        setFormSubmit(true)
+        const response = await fetch("http://localhost:3000/borrowerLogin", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({ mobileNo: mobileNO })
+        })
+        const res = await response.json()
+        const { exist } = res;
+        console.log(exist)
+        if (exist) {
+            alert("Mobile no is already registered")
+            setIsOpen(true)
+            return;
+        } else {
+            setupRecaptcha();
+            setIsOpen(!isOpen);
+            setFormSubmit(true)
+            const phoneNumber = '+91' + mobileNO;
+            const appVerifier = window.recaptchaVerifier;
 
+            try {
+                const result = await signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+                setconfirmationResul(result)
+                window.confirmationResult = confirmationResult
+                setOTPSend(true)
+                setFormSubmit(false)
+            } catch (err) {
+                console.log(err)
+                alert(err)
+                setIsOpen(!isOpen)
 
-
-        const phoneNumber = '+91' + mobileNO;
-        const appVerifier = window.recaptchaVerifier;
-
-        try {
-            const result = await signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-            setconfirmationResul(result)
-            window.confirmationResult = confirmationResult
-            setOTPSend(true)
-            setFormSubmit(false)
-        } catch (err) {
-            console.log(err)
-            setRecaptchaerror("Please fill the form again")
-            setIsOpen(!isOpen)
-            setFirstName("");
-            setLastName("")
-            setMobileNo("");
-            setLoanType("");
-            setLoanAmount("");
+            } finally {
+                setFormSubmit(false)
+            }
         }
+
 
     };
 
