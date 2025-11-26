@@ -55,6 +55,7 @@ exports.loanDataForAuthUser =async (req,res,next) => {
         }
 
         const tokenId = authHeader.split(" ")[1];
+        
         if (!tokenId) {
             return res.status(401).json({ message: "Invalid authorization header" });
         }
@@ -63,18 +64,20 @@ exports.loanDataForAuthUser =async (req,res,next) => {
         const result = await Model.loanDataForAuthUser(decoded); 
         res.status(200).json({user:result})
     } catch (err) {
-        console.log(err)
+        // console.log(err)
     }
     
 }
 exports.checkToken=async(req,res,next) => {
-      const token = req.headers.authorization?.split(" ")[1];
+    const token = req.headers.authorization?.split(" ")[1];
+    
   if (!token) return res.status(401).json({ message: "No token" });
 
   try {
     await Admin.auth().verifyIdToken(token);
-    return res.sendStatus(200); // valid
+    return res.status(200).json({ valid: true }); // valid
   } catch (err) {
-    return res.sendStatus(401); // expired or invalid
+      console.log(err)
+    return res.status(401).json({ message: "Token expired or invalid" }); // expired or invalid
   }
 }
