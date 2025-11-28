@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Loader, Check } from "lucide-react";
 const LoanApplications = () => {
     const [loanApplications, setLoanApplications] = useState([]);
     useEffect(() => {
@@ -22,9 +23,9 @@ const LoanApplications = () => {
 
 
             <div className="flex flex-col items-center my-4">
-                <div className="p-5 border rounded-lg mx-4 md:w-3/4 w-11/12 border-blue-400">
+                <div className="p-5  rounded-xl mx-4 md:w-3/4 w-11/12 border-gray-400 border-2">
                     <div className="flex  flex-col items-center my-2">
-                        <h2 className=" text-xl md:text-3xl font-bold mb-4 tracking-wide inline-block text-center bg-gradient-to-r from-red-600 to-red-500 text-transparent bg-clip-text brightness-110 ">Live Loan Applications</h2>
+                        <h2 className=" text-xl md:text-3xl font-bold mb-4 tracking-wide inline-block text-center bg-gradient-to-r from-red-600 to-red-500 text-transparent bg-clip-text brightness-110 "><span className="text-lg animate-pulse text-red-500 pb-1">🔴</span>Live Loan Applications</h2>
                         <input type="text" placeholder="Search name" className="w-1/3 p-2 rounded-md border border-gray-300" />
                     </div>
                     <div>
@@ -41,12 +42,12 @@ const LoanApplications = () => {
                                 </thead>
                                 <tbody>
                                     {[...loanApplications].reverse().map((loan) => (
-                                        <tr key={loan.id} className="border ">
+                                        <tr key={loan.id} className="border text-white">
                                             <td className="border-r border-gray-300 p-2 text-left text-base font-medium">{loan.first_name} {loan.last_name}</td>
                                             <td className="border-r border-gray-300 p-2 text-left text-base font-medium">{loan.loan_type}</td>
                                             <td className="border-r border-gray-300 p-2 text-left text-base font-medium">{loan.loan_amount}</td>
                                             <td className="border-r border-gray-300 p-2 text-left text-base font-medium">
-                                                {loan.loan_status}
+                                                {(loan.loan_status == "pending") && (<><Loader className="inline-block animate-spin" color="yellow" />  <span className="text-yellow-400">{loan.loan_status}</span></>)}
                                                 <br />
                                                 Application date: {loan.submitted_at ? new Date(loan.submitted_at).toLocaleString(undefined, { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }) : ''}
                                             </td>
