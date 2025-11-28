@@ -13,6 +13,8 @@ import AdminLogin from "./components/AdminLogin"
 import MyLoanHeader from "./components/MyLoanHeader"
 import LoanStatus from "./components/LoanStatus"
 import Borrowerlogin from "./components/BorrowerLogin"
+import ProtectedRoute from "./components/ProtectedRoute"
+import EMISection from "./components/EMISection"
 function App() {
   const Home = () => {
 
@@ -35,8 +37,10 @@ function App() {
   const Admin = () => {
     return (
       <>
-        <AdminDashboard></AdminDashboard>
-        <LoanApplications></LoanApplications>
+        <div className="bg-black">
+          <AdminDashboard></AdminDashboard>
+          <LoanApplications></LoanApplications>
+        </div>
       </>
     )
   }
@@ -48,14 +52,33 @@ function App() {
       </>
     )
   }
+  const EmiSection = () => {
+    return (
+      <>
+        < MyLoanHeader></ MyLoanHeader>
+        <EMISection></EMISection>
+      </>
+    )
+  }
 
   return (
     <>
       <ModelProvider>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Admin />} />
           <Route path="/about" element={<About />} />
-          <Route path="/LoanStatusSection" element={<LoanStatusSection />} />
+
+          <Route path="/LoanStatusSection" element={
+            <ProtectedRoute>
+              <LoanStatusSection />
+            </ProtectedRoute>
+          } />
+          <Route path="/EMISection" element={
+            <ProtectedRoute>
+              <EmiSection />
+            </ProtectedRoute>
+          } />
+
         </Routes>
       </ModelProvider>
 
