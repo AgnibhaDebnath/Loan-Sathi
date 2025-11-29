@@ -1,4 +1,4 @@
-
+import { ModelContext } from '@/Contaxt/ModelContext';
 import { Users, IndianRupee } from 'lucide-react';
 import useStore from "../Store/store"
 const AdminDashboard = () => {
@@ -13,9 +13,10 @@ const AdminDashboard = () => {
         { label: "Application due", icon: "📄", value: ApplicationDue }
 
     ]
+
     return (
         <>
-            <div className="flex brightness-110 justify-center font-bold items-center py-1">
+            <div className="flex brightness-110 justify-center font-bold items-center py-2 border-b-2 border-gray-400">
                 <h1 className="text-center text-5xl text-white ">Admin Dashboard</h1>
             </div>
             <div className='bg-gradient-to-br from-cyan-600  to-teal-200 mx-5 shadow-xl my-7 rounded-2xl py-10 flex flex-wrap items-center justify-center  gap-4 brightness-105'>
@@ -37,6 +38,7 @@ const AdminDashboard = () => {
 
 
             </div>
+
 
 
         </>
