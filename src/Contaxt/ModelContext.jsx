@@ -4,7 +4,7 @@ export const ModelProvider = ({ children }) => {
     const [isOpen, setIsOpen] = useState(false)
     const [LoginFormOpen, setLoginFormOpen] = useState(false)
     const [Borrowerlogin, setBorrowerlogin] = useState(false)
-
+    const [popUp, setPopUp] = useState(false)
     return (
         <ModelContext.Provider value={
             {
@@ -13,7 +13,9 @@ export const ModelProvider = ({ children }) => {
                 LoginFormOpen,
                 setLoginFormOpen,
                 Borrowerlogin,
-                setBorrowerlogin
+                setBorrowerlogin,
+                popUp,
+                setPopUp
             }}
         >
             {children}
