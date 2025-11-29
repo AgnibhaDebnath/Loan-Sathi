@@ -77,16 +77,31 @@ const LoanStatus = () => {
                                             <span className="text-white mr-2">Loan Status:</span>
 
                                             {yourLoanStatus.loan_status === "pending" && (
-                                                <Loader className="text-yellow-400 animate-spin inline-block" size={20} aria-label="pending" />
+                                                <>
+                                                    <Loader className="text-yellow-400 animate-spin inline-block" size={20} aria-label="pending" />
+
+                                                    <span className="ml-2 capitalize text-yellow-400">
+                                                        {yourLoanStatus.loan_status}
+                                                    </span>
+                                                </>
                                             )}
                                             {yourLoanStatus.loan_status === "approved" && (
-                                                <Check className="text-green-400 inline-block" size={20} aria-label="approved" />
+                                                <>
+                                                    <Check className="text-green-400 inline-block" size={20} aria-label="approved" strokeWidth={3} />
+                                                    <span className="ml-2 capitalize text-green-400">
+                                                        {yourLoanStatus.loan_status}
+                                                    </span>
+                                                </>
                                             )}
                                             {yourLoanStatus.loan_status === "rejected" && (
-                                                <CircleX className="text-red-400 inline-block" size={20} aria-label="rejected" />
+                                                <>
+                                                    <CircleX className="text-red-400 inline-block" size={20} aria-label="rejected" />
+                                                    <span className="ml-2 capitalize text-red-400">
+                                                        {yourLoanStatus.loan_status}
+                                                    </span>
+                                                </>
                                             )}
 
-                                            <span className="ml-2 capitalize ">{yourLoanStatus.loan_status}</span>
                                         </h1>
                                     </div>
                                 </div>
@@ -94,10 +109,10 @@ const LoanStatus = () => {
                                     <div className="text-base font-medium">
                                         <ul>
                                             {yourLoanStatus.loan_status === "approved" && (
-                                                <li>Approved at: {yourLoanStatus.decision_at}</li>
+                                                <li className="text-cyan-400">Approved on: <span className="text-gray-300">{yourLoanStatus.decision_at ? new Date(yourLoanStatus.decision_at).toLocaleString(undefined, { month: "long", day: "numeric", year: "numeric", hour: "numeric", minute: '2-digit' }) : ''}</span></li>
                                             )}
                                             {yourLoanStatus.loan_status === "rejected" && (
-                                                <li>Rejected at: {yourLoanStatus.decision_at}</li>
+                                                <li className="text-red-500 brightness-110">Rejected on: <span className="text-gray-300">{yourLoanStatus.decision_at ? new Date(yourLoanStatus.decision_at).toLocaleString(undefined, { month: "long", day: "numeric", year: "numeric", hour: "numeric", minute: '2-digit' }) : ''}</span></li>
                                             )}
                                             {yourLoanStatus.loan_status === "pending" && (
                                                 <li className="list-disc text-yellow-400">Your loan application is under review</li>
