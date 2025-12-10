@@ -1,4 +1,5 @@
-const AdminModel=require("../Model/AdminModel")
+const AdminModel = require("../Model/AdminModel")
+const bcrypt=require("bcrypt")
 exports.getLoanDetails = async (req, res, next) => {
     try {
         const LoanDetails = await AdminModel.LoanDetails();
@@ -23,5 +24,46 @@ exports.Update_statsu_of_borrower = async(req, res, next) => {
     } catch (err) {
         console.log(err)
 }
+}
+exports.verify_password = async (req, res, next) => {
+    try {
+        const { password,adminName } = req.body;
+        const userPassword = password.trim()
+        const trimedName=adminName.trim()
+        
+       
+
+        const storedPassword = await AdminModel.verify_password(trimedName)
+        if (storedPassword === null) {
+            res.json({
+                success:false,message:"Admin name is not found"
+            })
+        }
+        
+        bcrypt.compare(userPassword, storedPassword, (err, isMatch) => {
+            if (err) {
+        console.error("Error comparing passwords:", err);
+        return;
+            }
+            else if (isMatch) {
+                       res.json({
+            success:true,message:"password verification successfull"
+        }) 
+            }
+            else {
+        res.json({
+        success:false,message:"Wrong password"
+        }) 
+            }
+        })
+    
+
+    
+    } catch (err) {
+        console.log(err)
+    }
+
+
+
 }
 
