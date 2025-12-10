@@ -9,7 +9,7 @@ const AdminRouter = require("./Router/AdminRouter");
 app.use(cors())
 app.use(express.json());
 app.use(ClintRouter);
-app.use(AdminRouter)
+app.use(AdminRouter);
 const server = http.createServer(app)
 
 const io = new Server(server, {
