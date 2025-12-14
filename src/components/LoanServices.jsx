@@ -47,7 +47,7 @@ const LoanServices = () => {
                         <div className="flex justify-center flex-row px-3  ">
                             <ul className='list-disc'>
                                 <li className="text-base text-gray-500 ">{item.description}</li>
-                                <li className='text-base text-gray-500'>Interest Rate: <span className='font-semibold bg-gradient-to-r from-red-500 via-white to-red-500 animate-shine [background-size:200%_auto] text-transparent bg-clip-text'>{item.interestRate} per year</span></li>
+                                <li className='text-base text-gray-500'>Interest Rate: <span className='font-semibold bg-gradient-to-r from-red-600 via-red-300 to-red-600 animate-shine [background-size:200%_auto] text-transparent bg-clip-text'>{item.interestRate} per year</span></li>
                                 <li className='text-base text-gray-500 font-semibold'>Lone tenure: {item.tenure}</li>
                                 <li className='text-base text-gray-500 font-semibold'>Amount: {item.amount}</li>
                             </ul>
