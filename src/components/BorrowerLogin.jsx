@@ -154,9 +154,10 @@ const Borrowerlogin = () => {
                     <h1 className="font-medium text-green-500">Vefify your modible number</h1>
                 </div>
                 <input
-                    type="text"
+
                     maxlength={6}
                     placeholder="Enter OTP"
+                    type="password"
                     value={otp}
                     onChange={e => {
                         const onlyDigits = e.target.value.replace(/\D/g, "")
