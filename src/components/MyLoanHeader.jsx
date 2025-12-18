@@ -50,8 +50,8 @@ const MyLoanHeader = () => {
             <div className="h-14" aria-hidden="true" />
 
             {isOpen && (
-                <div className="absolute right-2 top-14 w-40 flex justify-center p-2 shadow-2xl bg-white rounded-md z-50 md:hidden">
-                    <ul className="flex flex-col gap-4 text-black font-medium text-sm px-4 py-2">
+                <div className="fixed border border-gray-200 right-0 top-16 w-40 flex justify-center p-2 shadow-2xl bg-gray-600 rounded-xl z-50 md:hidden">
+                    <ul className="flex flex-col gap-4 text-white font-medium text-sm px-4 py-2">
                         <li className="hover:scale-105 transition duration-200"><Link to="/LoanStatusSection">Loan status</Link></li>
                         <li className="hover:scale-105 transition duration-200"><Link to="/EMISection">EMI section</Link></li>
                         <li className="flex flex-row items-center gap-1">
