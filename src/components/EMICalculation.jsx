@@ -1,16 +1,18 @@
 import { useState } from "react";
-
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { CircleX } from "lucide-react";
 const FloatingEMICalculator = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [amount, setAmount] = useState("");
     const [rate, setRate] = useState("");
     const [months, setMonths] = useState("");
     const [emi, setEmi] = useState(null);
-
+    const [calculaterError, setCalculaterError] = useState({ loanAmountError: "", interestRateError: "", loanTenureError: "" })
 
     const calculateEMI = (e) => {
         e.preventDefault();
-        if (!amount || !months || !(months > 0)) return;
+
 
         const principal = parseFloat(amount);
         const monthlyRate = parseFloat(rate) / 12 / 100;
@@ -48,42 +50,100 @@ const FloatingEMICalculator = () => {
             {isOpen && (
                 <div className="fixed bottom-20 right-6 bg-white p-5 rounded-2xl shadow-2xl w-80 z-50 border border-gray-200">
                     <div className="flex justify-center">
-                        <h3 className="w-full  text-lg font-bold bg-gradient-to-r from-emerald-800 to-green-500 bg-clip-text text-transparent 
-                 tracking-wide inline-block mb-3 text-center">
+                        <h3 className="w-full font-bold bg-gradient-to-r from-emerald-800 to-green-500 bg-clip-text text-transparent 
+                 tracking-wide inline-block mb-3 text-center text-xl">
                             EMI Calculator
                         </h3>
                     </div>
                     <form className="flex flex-col gap-3 items-center" onSubmit={calculateEMI}>
-                        <input
+                        <Input
                             type="text"
                             placeholder="Loan Amount (₹)"
                             value={amount}
                             onChange={(e) => {
                                 const onlyDigits = e.target.value.replace(/\D/g, "")
                                 setAmount(onlyDigits)
+                                if (!onlyDigits) {
+                                    setCalculaterError(prev => ({
+                                        ...prev, loanAmountError: "Loan Amount required"
+                                    }))
+                                }
+                                else if (onlyDigits < 10000) {
+                                    setCalculaterError(prev => ({
+                                        ...prev, loanAmountError: "Loan amount must be at least ₹10,000"
+                                    }))
+                                }
+                                else {
+                                    setCalculaterError(prev => ({
+                                        ...prev, loanAmountError: ""
+                                    }))
+                                }
+
                             }}
-                            className="border w-full p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-base font-medium"
+                            className="rounded-xl font-medium"
                         />
-                        <input
-                            type="number"
+                        {calculaterError.loanAmountError && <p className="text-red-500 font-medium text-sm"><span className="mx-1"><CircleX className="inline" /></span>{calculaterError.loanAmountError}</p>}
+                        <Input
+                            type="text"
                             placeholder="Interest Rate (%)"
                             value={rate}
-                            onChange={e => setRate(e.target.value)}
-                            className="border p-2 w-full rounded-lg focus:outline-none   text-base font-medium "
+                            onChange={e => {
+                                const onlyDigits = e.target.value.replace(/\D/g, "")
+                                setRate(onlyDigits)
+                                if (!onlyDigits) {
+                                    setCalculaterError(prev => ({
+                                        ...prev, interestRateError: "Interest rate is required"
+                                    }))
+                                }
+                                else if (onlyDigits == 0) {
+                                    setCalculaterError(prev => ({
+                                        ...prev, interestRateError: "Interest rate can not be 0"
+                                    }))
+                                }
+                                else {
+                                    setCalculaterError(prev => ({
+                                        ...prev, interestRateError: ""
+                                    }))
+                                }
+                            }}
+                            className="rounded-xl font-medium"
                         />
-                        <input
-                            type="number"
+                        {calculaterError.interestRateError && <p className="text-red-500 font-medium text-sm"><span className="mx-1"><CircleX className="inline" /></span>{calculaterError.interestRateError}</p>}
+                        <Input
+                            type="text"
                             placeholder="Tenure (Months)"
                             value={months}
-                            onChange={(e) => setMonths(e.target.value)}
-                            className="border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-base font-medium w-full "
+                            onChange={(e) => {
+                                const onlyDigits = e.target.value.replace(/\D/g, "")
+                                setMonths(onlyDigits)
+                                if (!onlyDigits) {
+                                    setCalculaterError(prev => ({
+                                        ...prev, loanTenureError: "Loan tenure is required"
+                                    }))
+                                }
+                                else if (onlyDigits == 0) {
+                                    setCalculaterError(prev => ({
+                                        ...prev, loanTenureError: "Loan taenure can not be 0"
+                                    }))
+                                }
+                                else {
+                                    setCalculaterError(prev => ({
+                                        ...prev, loanTenureError: ""
+                                    }))
+                                }
+
+
+                            }}
+                            className="rounded-xl font-medium"
                         />
-                        <button
+                        {calculaterError.loanTenureError && <p className="text-red-500 font-medium text-sm"><span className="mx-1"><CircleX className="inline" /></span>{calculaterError.loanTenureError}</p>}
+                        <Button
                             type="submit"
-                            className="bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-all text-base font-medium w-1/2"
+                            disabled={(!amount || calculaterError.loanAmountError || !rate || calculaterError.interestRateError || !months || calculaterError.loanTenureError)}
+                            className=" bg-gradient-to-r from-emerald-800 to-green-500 text-white py-2 rounded-lg   text-base font-medium w-1/2  transition duration-200 hover:scale-x-105"
                         >
                             Calculate
-                        </button>
+                        </Button>
                     </form>
 
                     {emi && (
