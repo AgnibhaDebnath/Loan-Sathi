@@ -6,6 +6,7 @@ import { Spinner } from "@/components/ui/spinner"
 import { auth } from "../Firebase/firebaseConfig";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 
 const Borrowerlogin = () => {
     const { Borrowerlogin, setBorrowerlogin } = useContext(ModelContext)
@@ -16,6 +17,7 @@ const Borrowerlogin = () => {
     const [confirmationResult, setconfirmationResult] = useState("")
     const [formSubmit, setFormSubmit] = useState(false)
     const [otp, setotp] = useState('')
+
     const navigate = useNavigate();
     const setupRecaptcha = () => {
         if (!window.recaptchaVerifier) {
@@ -36,14 +38,35 @@ const Borrowerlogin = () => {
         try {
             const result = await confirmationResult.confirm(otp);
             const user = result.user;
-            const token = await user.getIdToken(); // Firebase ID token
-            localStorage.setItem("token", token);
-            localStorage.setItem("uid", user.uid);
+            const token = await user.getIdToken()
 
-            // Redirect to loan status page
-            navigate("/LoanStatusSection");
-            setOTPSend(false)
-            setotp('')
+            const res = await fetch("http://localhost:3000/api/borrower-login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    authorization: `Bearer ${token}`
+                }
+            })
+
+            const data = await res.json()
+            const { message } = data
+            if (res.ok) {
+                toast.success(message, {
+                    theme: "light",
+                    position: "top-center",
+                    autoClose: 5000
+                })
+
+                localStorage.setItem("token", token);
+
+                setOTPSend(false)
+                setotp('')
+                setTimeout(() => {
+                    navigate("/LoanStatusSection");
+                }, 5000);
+
+            }
+
         } catch (err) {
             console.log(err);
             setValidOTP(false)
@@ -56,9 +79,12 @@ const Borrowerlogin = () => {
     }, []);
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        console.log("form submitted")
+        console.log(mobileNo)
         setFormSubmit(true)
         try {
-            const response = await fetch("http://localhost:3000/borrowerLogin", {
+            const response = await fetch("http://localhost:3000/check-borrower-exist", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -68,15 +94,20 @@ const Borrowerlogin = () => {
             })
             const data = await response.json()
             if (!response.ok) {
-                throw new Error(data.message || "Server error");
+                toast.error("Server error", {
+                    autoClose: 5000,
+                    position: "top-center",
+                    theme: "light"
+                })
+
             }
-
-
             const { exist } = data;
-            console.log(exist)
-
             if (!exist) {
-                alert("Mobile no is not registered")
+                toast.error("Mobile no is not registered", {
+                    autoClose: 5000,
+                    position: "top-center",
+                    theme: "light"
+                })
                 setBorrowerlogin(true)
                 return;
             }
@@ -111,6 +142,7 @@ const Borrowerlogin = () => {
     }
     return (
         <>
+            <ToastContainer />
             <div id="recaptcha-container" className="hidden"></div>
             {Borrowerlogin && <div className="fixed top-20 md:top-36 left-1/2  transform -translate-x-1/2 w-4/5 sm:w-3/5 lg:w-2/5 bg-white p-5 rounded-xl shadow-2xl z-40">
                 <div className="flex justify-end ">
@@ -151,7 +183,7 @@ const Borrowerlogin = () => {
             </div>}
             {OTPSend && <div className="fixed flex flex-col items-center justify-center gap-3 h-52 w-4/5 md:w-2/5 sm:w-1/2 top-32 left-1/2 transform -translate-x-1/2 bg-white  rounded-xl shadow-2xl z-50">
                 <div>
-                    <h1 className="font-medium text-green-500">Vefify your modible number</h1>
+                    <h1 className="font-medium  text-green-500">Vefify your modible number</h1>
                 </div>
                 <input
 
@@ -174,7 +206,7 @@ const Borrowerlogin = () => {
                 <button
                     onClick={verifyOtp}
                     disabled={otp.length !== 6}
-                    className="bg-green-500 text-white font-medium px-3 py-2 rounded disabled:opacity-50"
+                    className="bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium px-3 py-2 rounded-lg hover:scale-x-105 transition duration-200 disabled:opacity-50"
                 >
                     Verify OTP
                 </button>
