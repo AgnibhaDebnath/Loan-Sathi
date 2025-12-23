@@ -4,8 +4,8 @@
     const connection = mysql.createPool({
         host: 'localhost', // Or your MySQL server host
         user: 'root', // Your MySQL username
-        password: 'Tunai@2005', // Your MySQL password
-        database: 'loan_management_system', // The database you want to connect to
-        port:3306
+        password: process.env.DATABASE_PASSWORD, // Your MySQL password
+        database: process.env.DATABASE, // The database you want to connect to
+        port:process.env.PORT
     });
 module.exports = connection;
