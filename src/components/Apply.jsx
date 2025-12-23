@@ -4,22 +4,25 @@ import { X } from 'lucide-react';
 import { CircleX } from 'lucide-react'
 import { auth } from "../Firebase/firebaseConfig";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+
 import { Input } from "@/components/ui/input"
 import { Select, SelectGroup, SelectValue, SelectContent, SelectItem, SelectLabel, SelectTrigger } from "@/components/ui/select"
 import { Spinner } from "@/components/ui/spinner"
+import { Button } from "./ui/button";
 const Apply = () => {
     const { isOpen, setIsOpen } = useContext(ModelContext);
     const { Borrowerlogin, setBorrowerlogin } = useContext(ModelContext);
 
-    const navigate = useNavigate();
+
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("")
     const [mobileNO, setMobileNo] = useState("");
     const [loanType, setLoanType] = useState("");
     const [loanAmount, setLoanAmount] = useState("");
-    const [error, setError] = useState({});
+
+    const [error, setError] = useState({ firstNameError: "", lastNameError: "", mobileNoError: "", loanAmountError: "" });
+
     const [popup, setPopup] = useState(false);
     const [OTPsend, setOTPSend] = useState(false)
     const [otp, setotp] = useState("")
@@ -27,19 +30,11 @@ const Apply = () => {
     const [confirmationResult, setconfirmationResul] = useState("")
     const [recaptchaerror, setRecaptchaerror] = useState("")
     const [validOTP, setValidOTP] = useState(true)
-    const [validMobileNo, setValidmobileNo] = useState(true)
+    const [validMobileNo, setValidmobileNo] = useState(false)
     const [message, setMessage] = useState("")
     const [formSubmit, setFormSubmit] = useState(false)
-    const validate = () => {
-        const errors = {};
-        if (!firstName.trim()) errors.firstName = "First name is required";
-        if (!lastName.trim()) errors.lastName = "Last name is required";
-        if (!mobileNO.trim()) errors.mobile = "Mobile number is required";
-        if (!loanType.trim()) errors.loan = "Loan type is required";
-        if (!loanAmount.trim()) errors.amount = "Loan amount is required";
-        setError(errors);
-        return Object.keys(errors).length === 0 && validMobileNo;
-    };
+
+
 
     // Setup reCAPTCHA (required by Firebase)
     const setupRecaptcha = () => {
@@ -89,7 +84,6 @@ const Apply = () => {
             } else {
                 setIsOpen(true)
                 setotp("")
-                alert(message)
 
             }
         } catch (err) {
@@ -127,48 +121,28 @@ const Apply = () => {
     // Handle loan form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!validate()) return;
-        const response = await fetch("http://localhost:3000/borrowerLogin", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify({ mobileNo: mobileNO })
-        })
-        const res = await response.json()
-        const { exist } = res;
-        console.log(exist)
-        if (exist) {
-            alert("Mobile no is already registered")
-            setIsOpen(true)
-            return;
-        } else {
-            setupRecaptcha();
-            setIsOpen(!isOpen);
-            setFormSubmit(true)
-            const phoneNumber = '+91' + mobileNO;
-            const appVerifier = window.recaptchaVerifier;
 
-            try {
-                const result = await signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-                setconfirmationResul(result)
-                window.confirmationResult = confirmationResult
-                setOTPSend(true)
-                setFormSubmit(false)
-            } catch (err) {
-                console.log(err)
-                alert(err)
-                setIsOpen(!isOpen)
+        setupRecaptcha();
+        setIsOpen(!isOpen);
+        setFormSubmit(true)
+        const phoneNumber = '+91' + mobileNO;
+        const appVerifier = window.recaptchaVerifier;
 
-            } finally {
-                setFormSubmit(false)
-            }
+        try {
+            const result = await signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+            setconfirmationResul(result)
+            window.confirmationResult = confirmationResult
+            setOTPSend(true)
+            setFormSubmit(false)
+        } catch (err) {
+            console.log(err)
+            alert(err)
+            setIsOpen(!isOpen)
+
+        } finally {
+            setFormSubmit(false)
         }
-
-
     };
-
     return (
         <>
             <div id="recaptcha-container" className="hidden"></div>
@@ -205,12 +179,17 @@ const Apply = () => {
                             value={firstName}
                             onChange={e => {
                                 const onlyEnglishLetter = e.target.value.replace(/[^A-Za-z]/g, "")
+
                                 setFirstName(onlyEnglishLetter)
+                                if (!onlyEnglishLetter) {
+                                    setError(prev => ({ ...prev, firstNameError: "First name is required" }))
+                                } else {
+                                    setError(prev => ({ ...prev, firstNameError: "" }))
+                                }
                             }}
                         />
-                        <div className="flex justify-start md:justify-center w-4/5 items-center gap-1">
-                            {error.firstName && <CircleX color="red" size={15} />}
-                            {error.firstName && <p className="text-red-500 text-sm w-4/5  md:w-3/5 items-center font-medium">{error.firstName}</p>}
+                        <div className="flex justify-center  w-4/5  gap-1">
+                            {error.firstNameError && <p className="text-red-500 text-sm w-4/5  md:w-3/5 items-center font-medium"><span><CircleX className="inline" size={15} /></span>{error.firstNameError}</p>}
                         </div>
                         <Input
                             type="text"
@@ -219,12 +198,19 @@ const Apply = () => {
                             value={lastName}
                             onChange={e => {
                                 const onlyEnglishLetter = e.target.value.replace(/[^A-Za-z]/g, "")
+
                                 setLastName(onlyEnglishLetter)
+                                if (!onlyEnglishLetter) {
+                                    setError(prev => ({ ...prev, lastNameError: "Last name is required" }))
+                                } else {
+                                    setError(prev => ({ ...prev, lastNameError: "" }))
+                                }
+
                             }}
                         />
                         <div className="flex justify-start md:justify-center w-4/5 items-center gap-1">
-                            {error.lastName && <CircleX color="red" size={15} />}
-                            {error.lastName && <p className="text-red-500 text-sm w-4/5  md:w-3/5  font-medium">{error.lastName}</p>}
+
+                            {error.lastNameError && <p className="text-red-500 text-sm w-4/5  md:w-3/5  font-medium"><span><CircleX color="red" className="inline" size={15} /></span>{error.lastNameError}</p>}
                         </div>
 
                         <Input
@@ -233,27 +219,25 @@ const Apply = () => {
                             className="border-2 border-gray-300 w-4/5 md:w-4/6 lg:w-3/6 p-2  rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-base font-medium"
                             value={mobileNO}
                             onChange={e => {
-                                setMobileNo(e.target.value.replace(/\D/g, ""))
-                                if (e.target.value.length === 10) {
-                                    setValidmobileNo(true)
+                                const onlyDigits = e.target.value.replace(/\D/g, "")
+                                setMobileNo(onlyDigits)
+                                if (!onlyDigits) {
+                                    setError(prev => ({ ...prev, mobileNoError: "Mobile no required" }))
+                                } else if (onlyDigits.length !== 10) {
+                                    setError(prev => ({ ...prev, mobileNoError: "Mobile no must be exact 10 digits" }))
+                                    setValidmobileNo(false)
                                 }
                                 else {
-                                    setValidmobileNo(false)
+                                    setError(prev => ({ ...prev, mobileNoError: "" }))
+                                    setValidmobileNo(true)
                                 }
                             }}
 
                         />
                         <div className="flex justify-start md:justify-center w-4/5 md:3/5 items-center gap-1">
-                            {error.mobile && <CircleX color="red" size={15} />}
-                            {error.mobile && <p className="text-red-500 text-sm w-4/5  md:w-3/5  font-medium ">{error.mobile}</p>}
-                        </div>
-                        <div className="flex justify-start md:justify-center w-4/5 items-center gap-1">
-                            {!validMobileNo && <CircleX color="red" size={15} />}
-                            {!validMobileNo && <p className="text-red-500 text-sm w-4/5  md:w-3/5  font-medium ">
-                                Enter valid mobile no</p>}
-                        </div>
 
-
+                            {error.mobileNoError && <p className="text-red-500 text-sm w-4/5  md:w-3/5  font-medium "><span><CircleX color="red" className="inline mb-1" size={15} /></span>{error.mobileNoError}</p>}
+                        </div>
                         <Select value={loanType} onValueChange={setLoanType}>
                             <SelectTrigger className="border-2 border-gray-300 w-4/5 md:w-4/6 lg:w-3/6 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-base font-medium">
                                 <SelectValue placeholder="Select loan type" />
@@ -275,56 +259,71 @@ const Apply = () => {
                             placeholder="Enter loan amount"
                             className="border-2 !border-gray-300 w-4/5 md:w-4/6 lg:w-3/6 p-2 rounded-md focus:!outline-none focus:!ring-2 focus:!ring-green-400 text-base font-medium "
                             value={loanAmount}
-                            onChange={e => setLoanAmount(e.target.value.replace(/\D/g, ""))}
+                            onChange={e => {
+                                const onlyDigits = e.target.value.replace(/\D/g, "")
+                                setLoanAmount(onlyDigits)
+                                if (!onlyDigits) {
+                                    setError(prev => ({ ...prev, loanAmountError: "Loan amount  is required" }))
+                                } else {
+                                    setError(prev => ({ ...prev, loanAmountError: "" }))
+                                }
+
+                            }}
                         />
                         <div className="flex justify-start md:justify-center w-4/5 items-center gap-1">
-                            {error.amount && <CircleX color="red" size={15} />}
-                            {error.amount && <p className="text-red-500 text-sm w-4/5  md:w-3/5 items-center font-medium">{error.amount}</p>}
+
+                            {error.loanAmountError && <p className="text-red-500 text-sm w-4/5  md:w-3/5 items-center font-medium"><span><CircleX color="red" className="inline" size={15} /></span>{error.loanAmountError}</p>}
                         </div>
 
-                        <button disabled={OTPsend} type="submit" className="bg-gradient-to-r from-pink-600 to-red-500 text-white font-medium px-4 py-1.5 transition duration-200 rounded-sm hover:scale-105" >
+                        <Button disabled={OTPsend || !validMobileNo || !(firstName && lastName && mobileNO && loanAmount && loanType)} type="submit" className="bg-gradient-to-r from-pink-400 to-red-500 text-white font-medium px-7 py-1.5 transition duration-200 rounded-sm hover:scale-105" >
                             Submit
-                        </button>
+                        </Button>
                         {recaptchaerror && <p className="text-red-500 text-sm w-4/5 p-2 md:w-3/5 items-center font-medium">{recaptchaerror}</p>}
                     </form>
-                </div>
+                </div >
             )}
-            {formSubmit && <div className="fixed inset-0 flex items-center justify-center bg-white/60 z-50">
-                <Spinner className="size-20" color="white" />
-            </div>}
-
-            {OTPsend && <div className="fixed flex flex-col items-center justify-center gap-3 h-52 w-4/5 md:w-2/5 sm:w-1/2 top-32 left-1/2 transform -translate-x-1/2 bg-white  rounded-xl shadow-2xl z-50">
-                <div>
-                    <h1 className="font-medium text-green-500">Vefify your modible number</h1>
+            {
+                formSubmit && <div className="fixed inset-0 flex items-center justify-center bg-white/60 z-50">
+                    <Spinner className="size-20" color="white" />
                 </div>
-                <input
-                    type="text"
-                    maxlength={6}
-                    placeholder="Enter OTP"
-                    value={otp}
-                    onChange={e => {
-                        const onlyDigits = e.target.value.replace(/\D/g, "")
-                        setotp(onlyDigits)
-                    }}
-                    className="w-4/5 sm:w-4/5 md:w-3/5  tracking-widest px-4 py-2 border-b-2 border-b-gray-300  focus:outline-none focus:border-b-green-500 text-center shadow-sm text-base font-medium"
-                />
-                {!validOTP && <p className="text-red-500 text-sm w-4/5 p-2 md:w-3/5 items-center font-medium">Enter valid OTP</p>}
-                <button
-                    onClick={verifyOtp}
-                    disabled={otp.length !== 6}
-                    className="bg-green-500 text-white font-medium px-3 py-2 rounded disabled:opacity-50"
-                >
-                    Verify OTP
-                </button>
-            </div>}
+            }
 
-            {popup && isverified && (
-                <div className="fixed flex justify-center items-center h-40 w-4/5 sm:w-3/5 md:w-1/2 top-32 left-1/2 transform -translate-x-1/2 bg-white p-5 rounded-xl shadow-2xl z-50">
-                    <h1 className="text-center text-green-500 md:text-2xl font-medium">
-                        {message}
-                    </h1>
+            {
+                OTPsend && <div className="fixed flex flex-col items-center justify-center gap-3 h-52 w-4/5 md:w-2/5 sm:w-1/2 top-32 left-1/2 transform -translate-x-1/2 bg-white  rounded-xl shadow-2xl z-50">
+                    <div>
+                        <h1 className="font-medium text-green-500">Vefify your modible number</h1>
+                    </div>
+                    <input
+                        type="text"
+                        maxlength={6}
+                        placeholder="Enter OTP"
+                        value={otp}
+                        onChange={e => {
+                            const onlyDigits = e.target.value.replace(/\D/g, "")
+                            setotp(onlyDigits)
+                        }}
+                        className="w-4/5 sm:w-4/5 md:w-3/5  tracking-widest px-4 py-2 border-b-2 border-b-gray-300  focus:outline-none focus:border-b-green-500 text-center shadow-sm text-base font-medium"
+                    />
+                    {!validOTP && <p className="text-red-500 text-sm w-4/5 p-2 md:w-3/5 items-center font-medium">Enter valid OTP</p>}
+                    <button
+                        onClick={verifyOtp}
+                        disabled={otp.length !== 6}
+                        className="bg-green-500 text-white font-medium px-3 py-2 rounded disabled:opacity-50"
+                    >
+                        Verify OTP
+                    </button>
                 </div>
-            )}
+            }
+
+            {
+                popup && isverified && (
+                    <div className="fixed flex justify-center items-center h-40 w-4/5 sm:w-3/5 md:w-1/2 top-32 left-1/2 transform -translate-x-1/2 bg-white p-5 rounded-xl shadow-2xl z-50">
+                        <h1 className="text-center text-green-500 md:text-2xl font-medium">
+                            {message}
+                        </h1>
+                    </div>
+                )
+            }
         </>
     );
 };
