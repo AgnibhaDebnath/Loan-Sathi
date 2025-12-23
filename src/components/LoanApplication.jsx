@@ -111,53 +111,49 @@ const LoanApplications = () => {
         <>
 
 
-            <div className="flex flex-col items-center my-4">
-                <div className="p-5  rounded-xl mx-4 md:w-3/4 w-11/12 border-gray-400 border-2">
-                    <div className="flex  flex-col items-center my-2">
+            <div className="flex flex-col items-center mt-3 pb-3">
+                <div className="p-5  rounded-3xl mx-4 md:w-3/4 w-11/12 border-gray-400 border-2">
+                    <div className="flex flex-col items-center my-2">
                         <h2 className=" text-xl md:text-3xl font-bold mb-4 tracking-wide inline-block text-center bg-gradient-to-r from-red-600 to-red-500 text-transparent bg-clip-text brightness-110 "><span className="text-3xl animate-pulse text-red-500 pb-1">🔴</span>Live Loan Applications</h2>
 
                         <Select value={statusFilter} onValueChange={setStatusFilter}>
-                            <SelectTrigger className="   w-4/5 sm:w-7/12 md:w-7/12 lg:w-5/12
- font-medium rounded-xl
-    border-2 border-white/30
-    bg-white/10 backdrop-blur-md
-    text-white
-    hover:bg-white/20
-    transition-all duration-200 ">
+                            <SelectTrigger className="w-4/5 sm:w-7/12 md:w-7/12 lg:w-5/12
+               font-medium rounded-xl border border-white/30
+               bg-white/10 backdrop-blur-md text-white
+               hover:bg-white/20 
+               transition-all duration-200 outline-none shadow-sm ">
                                 <SelectValue placeholder="Loan status" />
                             </SelectTrigger>
-                            <SelectContent >
+                            <SelectContent className="rounded-xl border border-white/20 bg-black/80 backdrop-blur-md shadow-lg ">
                                 <SelectGroup>
-                                    <SelectLabel className="font-medium ">Select loan status</SelectLabel>
-                                    <SelectItem value="pending" className="font-medium text-yellow-400">pending</SelectItem>
-                                    <SelectItem value="approved" className="font-medium text-green-500">Approved</SelectItem>
-                                    <SelectItem value="rejected" className="font-medium text-red-500">Rejected</SelectItem>
+                                    <SelectLabel className="font-medium text-gray-300 px-2 py-1 ">Select loan status</SelectLabel>
+                                    <SelectItem value="pending" className="font-medium text-yellow-400 hover:bg-yellow-400/10 rounded-md px-2 py-2 transition-colors">pending</SelectItem>
+                                    <SelectItem value="approved" className="font-medium text-green-500 hover:bg-green-500/10 rounded-md px-2 py-2 transition-colors">Approved</SelectItem>
+                                    <SelectItem value="rejected" className="font-medium text-red-500 hover:bg-red-500/10 rounded-md px-2 py-2 transition-colors">Rejected</SelectItem>
                                 </SelectGroup>
                             </SelectContent>
 
                         </Select>
-                        <Button onClick={() => setStatusFilter("")} className="bg-gradient-to-r from-yellow-400 to-red-500 my-2">Reset Status filter</Button>
+                        <Button onClick={() => setStatusFilter("")} className="bg-gradient-to-r from-yellow-400 to-red-500 my-2 px-6">Reset Status filter</Button>
                         <Select value={loanTypeFilter} onValueChange={setLoanTypeFilter}>
-                            <SelectTrigger className="   w-4/5 sm:w-7/12 md:w-7/12 lg:w-5/12
- font-medium rounded-xl
-    border-2 border-white/30
-    bg-white/10 backdrop-blur-md
-    text-white
-    hover:bg-white/20
-    transition-all duration-200 ">
+                            <SelectTrigger className="w-4/5 sm:w-7/12 md:w-7/12 lg:w-5/12
+               font-medium rounded-xl border border-white/30
+               bg-white/10 backdrop-blur-md text-white
+               hover:bg-white/20 focus:ring-2
+               transition-all duration-200 outline-none shadow-sm ">
                                 <SelectValue placeholder="Loan type" />
                             </SelectTrigger>
-                            <SelectContent >
+                            <SelectContent className="rounded-xl border border-white/20 bg-black/80 backdrop-blur-md shadow-lg ">
                                 <SelectGroup>
-                                    <SelectLabel className="font-medium ">Select loan type</SelectLabel>
-                                    <SelectItem value="Personal" className="font-medium ">Parsonal</SelectItem>
-                                    <SelectItem value="Business" className="font-medium ">Business</SelectItem>
+                                    <SelectLabel className="font-medium text-white ">Select loan type</SelectLabel>
+                                    <SelectItem value="Personal" className="font-medium text-white">Parsonal</SelectItem>
+                                    <SelectItem value="Business" className="font-medium text-white">Business</SelectItem>
 
                                 </SelectGroup>
                             </SelectContent>
 
                         </Select>
-                        <Button onClick={() => setLoanTypeFilter("")} className="bg-gradient-to-r from-pink-400 to-red-500 mt-2">Reset loan type filter</Button>
+                        <Button onClick={() => setLoanTypeFilter("")} className="bg-gradient-to-r from-pink-400 to-red-500 mt-2 hover:scale-105 transition duration-200">Reset loan type filter</Button>
                     </div >
                     <div>
                         <div className="overflow-x-auto w-full">
@@ -191,7 +187,7 @@ const LoanApplications = () => {
                                                 <td className="border-r border-gray-300 p-2 text-left text-base font-medium">{loan.loan_type}</td>
                                                 <td className="border-r border-gray-300 p-2 text-left text-base font-medium">{loan.loan_amount}</td>
                                                 <td className="border-r border-gray-300 p-2 text-left text-base font-medium">
-                                                    {(loan.loan_status == "pending") && (<><Loader className="inline-block animate-spin" color="yellow" />  <span className="text-yellow-400">{loan.loan_status}</span></>)}
+                                                    {(loan.loan_status == "pending") && (<><Loader className="inline-block animate-spin text-yellow-300 brightness-150" />  <span className="text-yellow-400">{loan.loan_status}</span></>)}
 
                                                     {(loan.loan_status == "approved") && (<>  <span className="text-green-500"><Check className="inline" />Approved on<span className="ml-1">:</span><span className="text-blue-500 ml-1">{loan.decision_at ? new Date(loan.decision_at).toLocaleString(undefined, { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }) : ''}</span></span></>)}
 
@@ -243,10 +239,10 @@ const LoanApplications = () => {
                                                     {loan.loan_status === "rejected" &&
                                                         (<button
                                                             // onClick={() => approveLoan(loan.id)}
-                                                            className="bg-gray-700 my-2 text-red-500 rounded-full font-medium px-3 py-2  mr-2 flex justify-center"
+                                                            className="bg-gray-700 my-2 text-red-500 rounded-full font-medium px-3 py-2  mr-2 flex justify-center cursor-text"
                                                         >
                                                             <CircleX className="block" strokeWidth={3} />
-                                                            <span className="block mx-1 cursor-text">Rejected</span>
+                                                            <span className="block mx-1 ">Rejected</span>
                                                         </button>)
                                                     }
                                                 </td>
