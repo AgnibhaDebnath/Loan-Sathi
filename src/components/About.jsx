@@ -7,15 +7,14 @@ import LightRays from "./ui/LightRays";
 const About = () => {
     const { isOpen, setIsOpen } = useContext(ModelContext)
     const width = typeof window !== "undefined" ? window.innerWidth : 0;
-    const containerHeight =
-        width >= 1024 ? "70vh" : width >= 640 ? "80vh" : width > 400 ? "100vh" : "125vh";
+
 
     return (
         <>
             <section id="about" className="py-4">
 
-                <div className="w-full bg-black relative flex-wrap" style={{ height: containerHeight }}>
-                    <div style={{ width: '100%', height: '500px', position: 'relative' }}>
+                <div className="w-full bg-black relative flex flex-wrap" >
+                    <div style={{ width: '100%', position: 'relative' }} className="h-[910px] sm:h-[700px] min-[1080px]:h-[500px] md:h-[720px] ">
                         <LightRays
                             raysOrigin="top-center"
                             raysColor="#00ffff"
