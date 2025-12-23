@@ -1,7 +1,8 @@
-import { ModelContext } from '@/Contaxt/ModelContext';
-import { Loader, IndianRupee, Check } from 'lucide-react';
+
+import { Loader, IndianRupee, Menu, Handshake } from 'lucide-react';
 import useStore from "../Store/store"
-import { Spinner } from './ui/spinner';
+
+import { Link } from 'react-router-dom';
 const AdminDashboard = () => {
 
 
@@ -17,34 +18,63 @@ const AdminDashboard = () => {
 
     return (
         <>
-            <div className="flex brightness-110 justify-center font-bold items-center py-2 border-b-2 border-gray-400">
-                <h1 className="text-center text-5xl text-white ">Admin Dashboard</h1>
-            </div>
-            <div className='bg-gradient-to-br from-cyan-600  to-teal-200 mx-5 shadow-xl my-7 rounded-2xl py-10 flex flex-wrap items-center justify-center  gap-4 brightness-105'>
+            <header>
+                <header className="fixed w-full top-0 left-0 right-0 z-50 bg-black backdrop-blur-2xl brightness-105 sm:px-8  border-b-2 border-gray-500 ">
 
-                {CardData.map((item, index) =>
-                    <div key={index} className="  font-medium text-[1.1rem]  shadow-xl py-2 px-5 h-28 w-72 hover:scale-105 transition duration-200 my-3 bg-white  hover:shadow-2xl drop-shadow backdrop-blur-sm bg-white/30 border border-white/20">
-                        <div className='flex justify-center bg-cyan-500 p-1 rounded-full items-center brightness-125'>
-                            <h1 className='text-center '><span className="inline-block text-2xl ">{item.icon}</span>{item.label}</h1>
-                        </div>
-                        <div className="flex flex-row items-center justify-center">
-
-                            {item.label === "Application" ? <>
-                                <div className='grid grid-cols-2 '>
-                                    <p className=''><Loader className="inline text-yellow-500 animate-spin " />pending:{item.value[0]}</p>
-                                    <p className=''>✅approved:<span >{item.value[1]}</span></p>
-                                    <p className=''>❌rejected:{item.value[2]}</p>
+                    <nav className="flex justify-between">
+                        <div className='text-3xl font-bold justify-between w-full flex items-center py-2 px-3 gap-2'>
+                            <div className="flex flex-row items-center gap-3">
+                                <div className='h-12 w-12 rounded-full bg-white flex justify-center items-center'>
+                                    <Handshake color='blue' />
                                 </div>
-
-                            </> : item.value}
-                            {(index == 0 || index == 1) ? <IndianRupee size={15} /> : null
-                            }
-
+                                <h1 className='font-[Poppins] text-white inline-block'>Loan Sathi</h1>
+                            </div>
+                            <ul className="hidden md:flex">
+                                <div className="flex flex-row items-center gap-16 text-white sm:text-base font-medium text-sm">
+                                    <li className="hover:scale-105 transition duration-200"><Link to="/admin-section/admin-profile">Admin profile</Link></li>
+                                    <li className="hover:scale-105 transition duration-200"><Link to="/admin-section/loans">EMI Section</Link></li>
+                                </div>
+                            </ul>
+                            <div className="md:hidden">
+                                <button onClick={() => setIsOpen(!isOpen)}>
+                                    <Menu color="white" />
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                )}
+                    </nav>
+                </header>
+            </header>
 
 
+
+
+            <div className='pt-16'>
+                <div className='bg-gradient-to-br from-cyan-600  to-teal-200 mx-5 shadow-xl my-7 rounded-2xl py-10 flex flex-wrap items-center justify-center  gap-4 brightness-105 '>
+
+                    {CardData.map((item, index) =>
+                        <div key={index} className="  font-medium text-[1.1rem]  shadow-xl py-2 px-5 h-28 w-72 hover:scale-105 transition duration-200 my-3 bg-white  hover:shadow-2xl drop-shadow backdrop-blur-sm bg-white/30 border border-white/20">
+                            <div className='flex justify-center bg-cyan-500 p-1 rounded-full items-center brightness-125'>
+                                <h1 className='text-center '><span className="inline-block text-2xl ">{item.icon}</span>{item.label}</h1>
+                            </div>
+                            <div className="flex flex-row items-center justify-center">
+
+                                {item.label === "Application" ? <>
+                                    <div className='grid grid-cols-2 '>
+                                        <p className=''><Loader className="inline text-yellow-300 animate-spin " />pending:{item.value[0]}</p>
+                                        <p className=''>✅approved:<span >{item.value[1]}</span></p>
+                                        <p className=''>❌rejected:{item.value[2]}</p>
+                                    </div>
+
+                                </> : item.value}
+                                {(index == 0 || index == 1) ? <IndianRupee size={15} /> : null
+                                }
+
+                            </div>
+                        </div>
+                    )}
+
+
+                </div>
             </div>
 
 
