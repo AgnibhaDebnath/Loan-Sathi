@@ -2,43 +2,70 @@ import { ModelContext } from "@/Contaxt/ModelContext";
 import { useContext, useState } from "react";
 import { Input } from "./ui/input";
 import { X, CircleX, CircleCheck } from "lucide-react";
+import { Button } from "./ui/button";
+import { toast } from "react-toastify";
 const AdminLogin = () => {
     const { LoginFormOpen, setLoginFormOpen } = useContext(ModelContext)
     const [mobileNo, setMobileNO] = useState("")
+    const [mobileNoVerification, setMobileNoVerification] = useState(false)
     const [password, setPassword] = useState("")
-    const [passwordVerification, setPasswordVerification] = useState(null)
+    const [passwordVerification, setPasswordVerification] = useState(false)
     const [passwordVerificationMessage, setPasswordVerificationMessage] = useState("")
     const [adminName, setAdminName] = useState("")
-    const [error, setError] = useState("")
-
+    const [error, setError] = useState({ adminNameError: "", mobileNoError: "", passwoedError: "" })
+    const [validMobileNo, setValidMobileNo] = useState(false)
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const error = {}
-        if (!password || !adminName) {
-            password ? error.passwordError = "" : error.passwordError = "Password is required"
-            adminName ? error.nameError = "" : error.nameError = "Admin name is required"
-            setError(error)
-            return
-
-        }
-        else {
-            const res = await fetch("http://localhost:3000/verify-password", {
+        try {
+            const res = await fetch("http://localhost:3000/verify-admin-mobileNo", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
+                    "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ password, adminName })
-
+                body: JSON.stringify({ adminName, mobileNo })
             })
             const data = await res.json()
             const { success, message } = data
+            setMobileNoVerification(success)
             setPasswordVerification(success)
-
-            setPasswordVerificationMessage(message)
-            setError("")
-            console.log(success)
+            if (res.ok) {
+                toast.success(message, {
+                    position: "top-center",
+                    theme: "light",
+                    ariaLabel: 5000
+                })
+            }
+            else {
+                toast.error(message, {
+                    position: "top-center",
+                    theme: "light",
+                    ariaLabel: 5000
+                })
+            }
+        } catch (err) {
+            console.log(err)
         }
+        // try {
+
+        //     const res = await fetch("http://localhost:3000/verify-password", {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //             "Accept": "application/json"
+        //         },
+        //         body: JSON.stringify({ password, adminName })
+
+        //     })
+        //     const data = await res.json()
+        //     const { success, message } = data
+        //     setPasswordVerification(success)
+
+        //     setPasswordVerificationMessage(message)
+        //     setError("")
+        //     console.log(success)
+        // } catch (err) {
+        //     console.log(err)
+        // }
     }
 
     return (
@@ -48,8 +75,9 @@ const AdminLogin = () => {
                     <button onClick={() => {
                         setLoginFormOpen(!LoginFormOpen)
                         setError("")
-                        setPasswordVerification(null)
-                        setPasswordVerificationMessage("")
+                        setPasswordVerification(false)
+                        setMobileNoVerification(false)
+                        setMobileNO("")
                         setPassword("")
                         setAdminName("")
                     }}>
@@ -61,38 +89,60 @@ const AdminLogin = () => {
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="flex flex-col items-center gap-2 text-base font-medium">
-                        {error && <div className="bg-red-50 w-11/12 sm:w-4/5 md:w-3/5 lg:w-4/6  border-2  border-red-700 px-1 shadow-md shadow-red-200 mb-3">
-                            {error.passwordError && <p className="text-red-700 py-1">
-                                <CircleX className="inline" /> {error.passwordError}
-                            </p>}
-                            {error.nameError && <p className="text-red-700 py-1">
-                                <CircleX className="inline" /> {error.nameError}
-                            </p>}
-                        </div>}
-                        {!passwordVerification && <Input placeholder="Enter your name" onChange={e => setAdminName(e.target.value)} value={adminName} className="lg:w-4/6 w-4/5 md:w-3/5" />}
-                        {!passwordVerification && <Input placeholder="Enter password" onChange={e => setPassword(e.target.value)} value={password} className="lg:w-4/6 w-4/5 md:w-3/5" />}
+                        {!mobileNoVerification && <Input placeholder="Admin name"
+                            onChange={e => {
+                                const onlyLetterAndSpace = e.target.value.replace(/[^a-zA-Z\s]/g, "")
+                                setAdminName(onlyLetterAndSpace)
+                                if (!onlyLetterAndSpace) {
+                                    setError(prev => ({ ...prev, adminNameError: "Admin name is required" }))
+                                } else {
+                                    setError(prev => ({ ...prev, adminNameError: "" }))
+                                }
+                            }}
+                            value={adminName}
+                            className="lg:w-4/6 w-4/5 md:w-3/5" />}
+                        {error.adminNameError && <p className="text-red-500"><span><CircleX size={20} className="inline mb-1" /></span>{error.adminNameError}</p>}
 
+                        {!mobileNoVerification && <Input placeholder="Mobile no"
+                            type="text"
+                            onChange={e => {
+                                const onlyDigits = e.target.value.replace(/\D/g, "")
+                                setMobileNO(onlyDigits)
+                                if (!onlyDigits) {
+                                    setError(prev => ({ ...prev, mobileNoError: "Mobile no is required" }))
+                                }
+                                else if (onlyDigits.length !== 10) {
+                                    setError(prev => ({ ...prev, mobileNoError: "Mobile no must be exact 10 digits" }))
+                                    setValidMobileNo(false)
+                                }
+                                else {
+                                    setError(prev => ({ ...prev, mobileNoError: "" }))
+                                    setValidMobileNo(true)
+                                }
+                            }}
+                            value={mobileNo}
+                            className="lg:w-4/6 w-4/5 md:w-3/5" />}
+                        {error.mobileNoError && <p className="text-red-500"><span><CircleX size={20} className="inline mb-1" /></span>{error.mobileNoError}</p>}
 
-                        {
-                            passwordVerification === true && <>
+                        {passwordVerification && <Input placeholder=" Password"
+                            type="text"
+                            onChange={e => {
+                                const password = e.target.value;
+                                setPassword(password)
+                                if (!password) {
+                                    setError(prev => ({ ...prev, passwoedError: "Password is required" }))
+                                } else {
+                                    setError(prev => ({ ...prev, passwoedError: "" }))
+                                }
 
-                                <p className="text-green-600 brightness-105 text-lg"><CircleCheck className="inline text-green-500" size={30} />{passwordVerificationMessage}</p></>
-                        }
-                        {
-                            passwordVerification === false && <>
+                            }}
+                            value={password}
+                            className="lg:w-4/6 w-4/5 md:w-3/5" />}
+                        {error.passwoedError && <p className="text-red-500"><span><CircleX size={20} className="inline mb-1" /></span>{error.passwoedError}</p>}
 
-                                <p className="text-red-500"> <CircleX className="inline text-red-500" />{passwordVerificationMessage}</p></>
-                        }
-                        {/* {
-                            passwordVerification === null && <>
+                        {passwordVerification && <button className="py-1 rounded-sm px-3 bg-gradient-to-r text-white hover:scale-105 from-pink-600 to-red-500 transition duration-200">Verify password</button>}
 
-                                <p className="">proccessing...</p></>
-                        } */}
-                        {passwordVerification && <Input onChange={e => setMobileNO(e.target.value.replace(/\D/g, ""))}
-
-                            value={mobileNo} placeholder="Enter mobile no" className="lg:w-4/6 w-4/5 md:w-3/5 " />}
-                        {!passwordVerification && <button className="py-1 rounded-sm px-3 bg-gradient-to-r text-white hover:scale-105 from-pink-600 to-red-500 transition duration-200">Verify password</button>}
-                        {passwordVerification && <button className="py-1 rounded-sm px-3 bg-gradient-to-r text-white hover:scale-105 from-pink-600 to-red-500 transition duration-200">Verify mobile no</button>}
+                        {!mobileNoVerification && <Button disabled={!(adminName && mobileNo) || !validMobileNo} className="py-1 rounded-sm px-3 bg-gradient-to-r text-white hover:scale-105 from-pink-600 to-red-500 transition duration-200">Verify mobile no</Button>}
                     </div>
                 </form>
             </div>}
