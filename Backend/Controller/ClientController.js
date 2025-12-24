@@ -3,7 +3,7 @@ const Admin = require("firebase-admin")
 const serviceAccount = require("./loan-management-platform-750c5-firebase-adminsdk-fbsvc-35b48e95ad.json");
 Admin.initializeApp({
   credential: Admin.credential.cert(serviceAccount),
- projectId: "loan-management-platform-750c5", // ✅ your Project ID
+ projectId: process.env.PROJECT_ID, // ✅ your Project ID
 });
 exports.LoanApplyVerification  =async (req, res, next) => {
     const LoanData = req.body; 
@@ -63,17 +63,45 @@ exports.loanDataForAuthUser =async (req,res,next) => {
     }
     
 }
-exports.checkToken=async(req,res,next) => {
-    const token = req.headers.authorization?.split(" ")[1];
-    
-  if (!token) return res.status(401).json({ message: "No token" });
 
+exports.checkToken = async(req,res,next) => {
+    const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ message: "No token" });
   try {
-    await Admin.auth().verifyIdToken(token);
-    return res.status(200).json({ valid: true }); // valid
-  } catch (err) {
+      await Admin.auth().verifyIdToken(token);
+      return res.status(200).json({ message: "Token is valid" });
+    } catch (err) {
       console.log(err)
     return res.status(401).json({ message: "Token expired or invalid" }); // expired or invalid
   }
+}
+exports.verifyBorrower =async (req,res,next) => {
+    try {
+        const token = req.headers.authorization?.split(" ")[1];
+       
+
+        if (!token) return res.status(401).json({ message: "No token" });
+        const decoded = await Admin.auth().verifyIdToken(token);
+        const uid = decoded.uid
+        const phoneNoFull=decoded.phone_number
+        const phoneNo = phoneNoFull.startsWith("+91") ? phoneNoFull.slice(3): phoneNoFull
+        
+        const result = await Model.verifyBorrower(uid, phoneNo)
+        console.log(result)
+        if (result.status == "exist") {
+            res.status(200).send({
+message:"Login successfull"
+            })
+        }
+        else if (result.status == "updated") {
+            res.status(200).send({message:"Firebase UID linked to borrower"})
+        }
+        
+    } catch(err) {
+        console.log(err)
+    }
+    
+
+   
 }
 
