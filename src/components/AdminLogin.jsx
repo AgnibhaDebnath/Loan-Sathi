@@ -68,17 +68,16 @@ const AdminLogin = () => {
                 setOTPSend(false)
                 setotp('')
                 setValidOTP(true)
-
+                localStorage.setItem("token", token);
                 toast.success(message, {
                     toastId: "otpSuccess",
                     theme: "light",
                     position: "top-center",
                     autoClose: 5000
                 })
-                setTimeout(() => {
-                    navigate("/admin")
-                    return
-                }, 5000);
+
+                navigate("/admin")
+
 
 
             }
@@ -216,7 +215,7 @@ const AdminLogin = () => {
                     <h1 className="text-center font-bold text-xl sm:text-2xl md:text-3xl">Admin login from</h1>
                 </div>
                 <form onSubmit={handleSubmit}>
-                    <div className="flex flex-col items-center gap-2 text-base font-medium">
+                    <div className="flex flex-col items-center justify-center gap-2 text-base font-medium">
                         <Input placeholder="Admin name"
                             onChange={e => {
                                 const onlyLetterAndSpace = e.target.value.replace(/[^a-zA-Z\s]/g, "")
@@ -250,7 +249,7 @@ const AdminLogin = () => {
                             }}
                             value={mobileNo}
                             className="lg:w-4/6 w-4/5 md:w-3/5" />
-                        {error.mobileNoError && <p className="text-red-500"><span><CircleX size={20} className="inline mb-1" /></span>{error.mobileNoError}</p>}
+                        {error.mobileNoError && <p className="text-red-500 lg:w-4/6 w-4/5 md:w-3/5"><span className=""><CircleX size={20} className="inline mb-1" /></span><span className="">{error.mobileNoError}</span></p>}
 
                         <Input placeholder=" Password"
                             type="password"
