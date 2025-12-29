@@ -1,3 +1,5 @@
+
+
 /** @type {import('tailwindcss').Config} */
 export default {
     darkMode: ["class"],
@@ -59,11 +61,19 @@ export default {
 	borderShine: {
       '0%': { backgroundPosition: '0% 50%' },
       '100%': { backgroundPosition: '100% 50%' },
-    },
+		  },
+		  greenpulse: {
+			  "0%": { boxShadow: '0 0 0 rgba(0, 255, 0, 0.4)' },
+			  "50%": { boxShadow: '0 0 20px 10px rgba(0, 255, 0, 0.3)' },
+			  "100%" :{ boxShadow: '0 0 0 rgba(0, 255, 0, 0.4)' }
+		}
+	
+	
       },
       animation: {
 		  shine: 'shine 4s linear infinite',
 		  borderShine: 'borderShine 3s linear infinite',
+		  greenpulse:'greenpulse 2s infinite'
 		  },
 
   	}
