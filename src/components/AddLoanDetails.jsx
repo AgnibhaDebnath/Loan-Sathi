@@ -17,13 +17,13 @@ const AddLoanDetails = () => {
     const [mobileNo, setMobileNo] = useState("")
     const [mobileNoInLoan, setBorrowerNoInLoan] = useState("")
     const [loanAmount, setLoanAmount] = useState("")
-    const [EMIAmount, setEMIAmount] = useState("")
+
     const [loanTanure, setLoanTanure] = useState("")
     const [interestRate, setInterestRate] = useState("")
     const [borrowerID, setBorrowerID] = useState("")
     const [borrowerImage, setBorrowerImage] = useState(null);
     const [borrowerError, setBorrowerError] = useState({ nameError: "", imageError: "", numberError: "", borrowerIDError: "" })
-    const [loanDetailsError, setLoanDetailsError] = useState({ mobileNoError: "", loanAmountError: "", interestError: "", EMIAmountErrror: "", loanTanureError: "", dateError: "" })
+    const [loanDetailsError, setLoanDetailsError] = useState({ mobileNoError: "", loanAmountError: "", interestError: "", loanTanureError: "", dateError: "" })
     const [validMobileNo, setValidMobieNo] = useState(false)
 
     const [formSubmitted, setFormSubmitted] = useState(false)
@@ -104,7 +104,7 @@ const AddLoanDetails = () => {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ "mobileNo": mobileNoInLoan, "loanAmount": loanAmount, "interestRate": interestRate, "EMIAmount": EMIAmount, "loanTanure": loanTanure, "date": format(date, "yyyy-MM-dd") })
+                body: JSON.stringify({ "mobileNo": mobileNoInLoan, "loanAmount": loanAmount, "interestRate": interestRate, "loanTanure": loanTanure, "date": format(date, "yyyy-MM-dd") })
             })
             const data = await res.json()
             const { message } = data
@@ -151,7 +151,7 @@ const AddLoanDetails = () => {
                                 <h1 className="text-red-500 brightness-150 font-medium items-center"><span><Info className="inline mb-1 mx-1 " /></span>You must fill all four fields</h1>
                             </div>
                             <div className="w-4/5 sm:w-7/12 md:w-7/12 lg:w-5/12 relative">
-                                <IdCard className="text-white left-2 z-50 top-2  h-5 w-5  absolute" />
+                                <IdCard className="text-white left-2 z-40 top-2  h-5 w-5  absolute" />
                                 <Input
                                     value={borrowerID}
                                     onChange={(e) => {
@@ -172,7 +172,7 @@ const AddLoanDetails = () => {
 
                             </div>
                             <div className="w-4/5 sm:w-7/12 md:w-7/12 lg:w-5/12 relative">
-                                <User className="text-white left-2 z-50 top-2  h-5 w-5  absolute" />
+                                <User className="text-white left-2 z-40 top-2  h-5 w-5  absolute" />
                                 <Input
                                     value={BorrowerName}
                                     onChange={(e) => {
@@ -194,7 +194,7 @@ const AddLoanDetails = () => {
                                 {borrowerError.nameError && <p className="text-red-500 font-medium  "><span className="mx-1"><CircleX className="inline" /></span>{borrowerError.nameError}</p>}
                             </div>
                             <div className="w-4/5 sm:w-7/12 md:w-7/12 lg:w-5/12 relative">
-                                <Phone className="text-white left-2 z-50 top-2  h-5 w-5  absolute" />
+                                <Phone className="text-white left-2 z-40 top-2  h-5 w-5  absolute" />
                                 <Input
                                     value={mobileNo}
                                     onChange={e => {
@@ -277,7 +277,7 @@ const AddLoanDetails = () => {
                             </div>
 
                             <div className=" w-4/5 sm:w-7/12 md:w-7/12 lg:w-5/12 relative">
-                                <Banknote className="text-white top-2 left-2 absolute z-50 " />
+                                <Banknote className="text-white top-2 left-2 absolute z-40 " />
                                 <Input
                                     value={loanAmount}
                                     onChange={e => {
@@ -313,25 +313,6 @@ const AddLoanDetails = () => {
                                 />
                             </div>
                             {loanDetailsError.interestError && <p className="text-red-500 font-medium"><CircleX className="inline" />{loanDetailsError.interestError}</p>}
-                            <div className="w-4/5 sm:w-7/12 md:w-7/12 lg:w-5/12 relative">
-                                <Banknote className="text-white z-50 left-2 top-2 absolute" />
-                                <Input
-                                    value={EMIAmount}
-                                    onChange={e => {
-                                        const onlyDigit = e.target.value.replace(/\D/g, "")
-                                        setEMIAmount(onlyDigit)
-                                        if (!onlyDigit) {
-                                            setLoanDetailsError(prev => ({ ...prev, EMIAmountErrror: "EMI amount is required" }))
-                                        } else {
-                                            setLoanDetailsError(prev => ({ ...prev, EMIAmountErrror: "" }));
-                                        }
-
-                                    }}
-                                    placeholder="Enter EMI amount "
-                                    className=" w-full  font-medium rounded-xl border-2 border-white/30 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-all duration-200 outline-none px-9"
-                                />
-                            </div>
-                            {loanDetailsError.EMIAmountErrror && <p className="text-red-500 font-medium"><CircleX className="inline" />{loanDetailsError.EMIAmountErrror}</p>}
                             <div className=" w-4/5 sm:w-7/12 md:w-7/12 lg:w-5/12 relative">
                                 <Hourglass className="text-white top-2 left-2 absolute z-50 h-5" />
                                 <Input
@@ -379,7 +360,7 @@ const AddLoanDetails = () => {
                                 </PopoverContent>
                             </Popover>
 
-                            <Button disabled={!(mobileNoInLoan && loanAmount && interestRate && EMIAmount && loanTanure && date)} type="submit" className="bg-gradient-to-r from-pink-400 to-red-500 hover:scale-x-105 transition duration-200 px-8">Add Loan
+                            <Button disabled={!(mobileNoInLoan && loanAmount && interestRate && loanTanure && date)} type="submit" className="bg-gradient-to-r from-pink-400 to-red-500 hover:scale-x-105 transition duration-200 px-8">Add Loan
                                 details</Button>
                         </div>
                     </form>
