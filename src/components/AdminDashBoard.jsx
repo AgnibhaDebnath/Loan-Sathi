@@ -19,8 +19,7 @@ const AdminDashboard = () => {
     return (
         <>
             <header>
-                <header className="fixed w-full top-0 left-0 right-0 z-50 bg-black backdrop-blur-2xl brightness-105 sm:px-8  border-b-2 border-gray-500 ">
-
+                <header className="fixed w-full top-0 left-0 right-0 z-50 bg-black/75 backdrop-blur-2xl brightness-105 sm:px-8  border-b-2 border-gray-500 ">
                     <nav className="flex justify-between">
                         <div className='text-3xl font-bold justify-between w-full flex items-center py-2 px-3 gap-2'>
                             <div className="flex flex-row items-center gap-3">
@@ -31,8 +30,8 @@ const AdminDashboard = () => {
                             </div>
                             <ul className="hidden md:flex">
                                 <div className="flex flex-row items-center gap-16 text-white sm:text-base font-medium text-sm">
-                                    <li className="hover:scale-105 transition duration-200"><Link to="/admin-section/admin-profile">Admin profile</Link></li>
-                                    <li className="hover:scale-105 transition duration-200"><Link to="/admin-section/loans">EMI Section</Link></li>
+                                    <li className="hover:scale-105 transition duration-200 hover:text-pink-500"><Link to="/admin/admin-profile ">Admin profile</Link></li>
+                                    <li className="hover:scale-105 transition duration-200 hover:text-pink-500"><Link to="/admin/loans">EMI Section</Link></li>
                                 </div>
                             </ul>
                             <div className="md:hidden">
@@ -60,9 +59,9 @@ const AdminDashboard = () => {
 
                                 {item.label === "Application" ? <>
                                     <div className='grid grid-cols-2 '>
-                                        <p className=''><Loader className="inline text-yellow-300 animate-spin " />pending:{item.value[0]}</p>
-                                        <p className=''>✅approved:<span >{item.value[1]}</span></p>
-                                        <p className=''>❌rejected:{item.value[2]}</p>
+                                        <p className=''><Loader className="inline text-yellow-300 animate-spin " />pending:<span className='ml-1'>{item.value[0]}</span></p>
+                                        <p className=''>✅approved:<span className='ml-1'>{item.value[1]}</span></p>
+                                        <p className=''>❌rejected:<span className='ml-1'>{item.value[2]}</span></p>
                                     </div>
 
                                 </> : item.value}
