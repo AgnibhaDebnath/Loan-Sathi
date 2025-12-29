@@ -175,7 +175,7 @@ const Apply = () => {
                         <Input
                             type="text"
                             placeholder="Enter your first name"
-                            className="border-2 border-gray-300 w-4/5 p-2 md:w-4/6 lg:w-3/6 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-base font-medium"
+                            className="shadow-lg w-4/5 p-2 md:w-4/6 lg:w-3/6 rounded-lg focus:outline-none  text-base font-medium"
                             value={firstName}
                             onChange={e => {
                                 const onlyEnglishLetter = e.target.value.replace(/[^A-Za-z]/g, "")
@@ -189,12 +189,12 @@ const Apply = () => {
                             }}
                         />
                         <div className="flex justify-center  w-4/5  gap-1">
-                            {error.firstNameError && <p className="text-red-500 text-sm w-4/5  md:w-3/5 items-center font-medium"><span><CircleX className="inline" size={15} /></span>{error.firstNameError}</p>}
+                            {error.firstNameError && <p className="text-red-500 text-sm w-4/5  md:w-3/5 items-center font-medium"><span className="mr-1 mb-1"><CircleX className="inline" size={18} /></span>{error.firstNameError}</p>}
                         </div>
                         <Input
                             type="text"
                             placeholder="Enter your last name"
-                            className="border-2 border-gray-300 w-4/5 p-2 md:w-4/6 lg:w-3/6 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-base font-medium"
+                            className="shadow-lg w-4/5 p-2 md:w-4/6 lg:w-3/6 rounded-lg focus:outline-none  text-base font-medium"
                             value={lastName}
                             onChange={e => {
                                 const onlyEnglishLetter = e.target.value.replace(/[^A-Za-z]/g, "")
@@ -210,13 +210,13 @@ const Apply = () => {
                         />
                         <div className="flex justify-start md:justify-center w-4/5 items-center gap-1">
 
-                            {error.lastNameError && <p className="text-red-500 text-sm w-4/5  md:w-3/5  font-medium"><span><CircleX color="red" className="inline" size={15} /></span>{error.lastNameError}</p>}
+                            {error.lastNameError && <p className="text-red-500 text-sm w-4/5  md:w-3/5  font-medium"><span className="mr-1 mb-1"><CircleX color="red" className="inline" size={18} /></span>{error.lastNameError}</p>}
                         </div>
 
                         <Input
                             type="text"
                             placeholder="Enter mobile number"
-                            className="border-2 border-gray-300 w-4/5 md:w-4/6 lg:w-3/6 p-2  rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-base font-medium"
+                            className="shadow-xl w-4/5 md:w-4/6 lg:w-3/6 p-2  rounded-lg focus:outline-none text-base font-medium"
                             value={mobileNO}
                             onChange={e => {
                                 const onlyDigits = e.target.value.replace(/\D/g, "")
@@ -236,10 +236,10 @@ const Apply = () => {
                         />
                         <div className="flex justify-start md:justify-center w-4/5 md:3/5 items-center gap-1">
 
-                            {error.mobileNoError && <p className="text-red-500 text-sm w-4/5  md:w-3/5  font-medium "><span><CircleX color="red" className="inline mb-1" size={15} /></span>{error.mobileNoError}</p>}
+                            {error.mobileNoError && <p className="text-red-500 text-sm w-4/5  md:w-3/5  font-medium "><span className="mr-1 mb-1"><CircleX color="red" className="inline mb-1" size={18} /></span>{error.mobileNoError}</p>}
                         </div>
                         <Select value={loanType} onValueChange={setLoanType}>
-                            <SelectTrigger className="border-2 border-gray-300 w-4/5 md:w-4/6 lg:w-3/6 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-base font-medium">
+                            <SelectTrigger className="shadow-lg w-4/5 md:w-4/6 lg:w-3/6 p-2 rounded-lg focus:outline-none text-base font-medium">
                                 <SelectValue placeholder="Select loan type" />
                             </SelectTrigger>
                             <SelectContent modal={false} className="text-base font-medium" position="popper">
@@ -257,7 +257,7 @@ const Apply = () => {
                         <Input
                             type="text"
                             placeholder="Enter loan amount"
-                            className="border-2 !border-gray-300 w-4/5 md:w-4/6 lg:w-3/6 p-2 rounded-md focus:!outline-none focus:!ring-2 focus:!ring-green-400 text-base font-medium "
+                            className="w-4/5 md:w-4/6 lg:w-3/6 p-2 rounded-md focus:outline-none   text-base font-medium  shadow-lg"
                             value={loanAmount}
                             onChange={e => {
                                 const onlyDigits = e.target.value.replace(/\D/g, "")
@@ -272,7 +272,7 @@ const Apply = () => {
                         />
                         <div className="flex justify-start md:justify-center w-4/5 items-center gap-1">
 
-                            {error.loanAmountError && <p className="text-red-500 text-sm w-4/5  md:w-3/5 items-center font-medium"><span><CircleX color="red" className="inline" size={15} /></span>{error.loanAmountError}</p>}
+                            {error.loanAmountError && <p className="text-red-500 text-sm w-4/5  md:w-3/5 items-center font-medium"><span className="mr-1 mb-1"><CircleX color="red" className="inline" size={18} /></span>{error.loanAmountError}</p>}
                         </div>
 
                         <Button disabled={OTPsend || !validMobileNo || !(firstName && lastName && mobileNO && loanAmount && loanType)} type="submit" className="bg-gradient-to-r from-pink-400 to-red-500 text-white font-medium px-7 py-1.5 transition duration-200 rounded-sm hover:scale-105" >
