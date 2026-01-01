@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/Firebase/firebaseConfig";
-
+import { LoaderCircle } from 'lucide-react';
 const ProtectedRoute = ({ children }) => {
     const [Login, setLogin] = useState(null);
     const [validToken, setValidToken] = useState(null)
@@ -47,7 +47,10 @@ const ProtectedRoute = ({ children }) => {
     if (Login === null || validToken === null) {
         return (
             <div className="flex justify-center items-center h-screen">
-                <p className="text-3xl font-bold">Loading...</p>
+                <div className="relative">
+                    <LoaderCircle className="animate-spin size-52 text-blue-600" />
+                    <span className="absolute inset-0 flex items-center justify-center text-2xl font-bold"> Loan Sathi </span>
+                </div>
             </div>
         );
     }
