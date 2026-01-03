@@ -55,7 +55,7 @@ exports.loanDataForAuthUser =async (req,res,next) => {
             return res.status(401).json({ message: "Invalid authorization header" });
         }
         const decoded = await Admin.auth().verifyIdToken(tokenId);
-      console.log( decoded)
+      
         const result = await Model.loanDataForAuthUser(decoded); 
         res.status(200).json({user:result})
     } catch (err) {
@@ -69,7 +69,9 @@ exports.checkToken = async(req,res,next) => {
   if (!token) return res.status(401).json({ message: "No token" });
   try {
       await Admin.auth().verifyIdToken(token);
+
       return res.status(200).json({ message: "Token is valid" });
+
     } catch (err) {
       console.log(err)
     return res.status(401).json({ message: "Token expired or invalid" }); // expired or invalid
@@ -79,7 +81,6 @@ exports.verifyBorrower =async (req,res,next) => {
     try {
         const token = req.headers.authorization?.split(" ")[1];
        
-
         if (!token) return res.status(401).json({ message: "No token" });
         const decoded = await Admin.auth().verifyIdToken(token);
         const uid = decoded.uid
@@ -99,9 +100,54 @@ message:"Login successfull"
         
     } catch(err) {
         console.log(err)
+        res.status(500).send({message:"Server error!"})
     }
     
 
    
 }
+exports.get_loan_details =async (req,res,next) => {
+    const token = req.headers.authorization?.split(" ")[1]
+    try {
+        
+ 
+    if (!token) {
+        return res.status(401).send({success:"false",message:"No authentication token provided"})
+    }
+    else {
+        const decoded = await Admin.auth().verifyIdToken(token);
+        const uid = decoded.uid
+        const result = await Model.get_loan_details(uid)
+        if (result == null) {
+    res.status(404).send({loanDetails:null })
+        } else {
+       
+        res.status(200).send({loanDetails:result })     
+}
+        }
+    } catch (err) {
+        console.log("server error:",err)
+           }
+    
+}
 
+exports.get_emi_details = async (req, res, next) => {
+    const emi_per_page = req.query.limit
+    const skip=req.query.skip
+    const { loanID } = req.body
+    try {
+        const result = await Model.get_emi_details(loanID,skip,emi_per_page)
+        const { rows, countPaidorUnpaidEMI } = result
+       
+    if (rows.length>0 && countPaidorUnpaidEMI.length>0) {
+        res.status(200).send({emiDetails:rows,paidorUnpaidEMINumber:countPaidorUnpaidEMI})
+    }
+    else {
+       res.status(404).send({emiDetails:[],paidorUnpaidEMINumber:[]}) 
+    }   
+    } catch (err) {
+        console.log(err)
+    }
+
+   
+}
