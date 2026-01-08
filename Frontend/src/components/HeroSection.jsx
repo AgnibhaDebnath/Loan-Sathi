@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import money from "../../../Frontend/assets/heroSection.jpg"
+import money from "../../src/assets/heroSection.jpg"
 import { ArrowRight } from 'lucide-react';
 import { ModelContext } from "../Contaxt/ModelContext";
 import { useContext } from "react";
