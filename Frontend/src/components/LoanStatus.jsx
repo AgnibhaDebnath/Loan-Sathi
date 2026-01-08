@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import backgroundImage from "../../../Frontend/assets/backround_borrower_lon_status.jpg"
+import backgroundImage from "../../src/assets/backround_borrower_lon_status.jpg"
 
 import { Loader, CircleX, BriefcaseBusiness, User, IndianRupee, CheckCircle } from "lucide-react"
 const LoanStatus = () => {
