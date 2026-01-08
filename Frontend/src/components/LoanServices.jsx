@@ -1,8 +1,8 @@
 import { BriefcaseBusiness } from 'lucide-react'
 import { Wallet } from "lucide-react";
 import { ArrowRight } from "lucide-react"
-import personalLoanImage from "../../../Frontend/assets/personal.png"
-import BusinessLoanImage from "../../../Frontend/assets/Business.png"
+import personalLoanImage from "../../src/assets/personal.png"
+import BusinessLoanImage from "../../src/assets/Business.png"
 import { ModelContext } from '../Contaxt/ModelContext';
 import { useContext } from 'react';
 const LoanServices = () => {
