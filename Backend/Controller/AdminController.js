@@ -242,6 +242,33 @@ exports.verify_token_For_admin = async (req, res, next) => {
    
 }
 
-// exports.get_laon_details = () => {
+exports.get_emi_details_for_Admin= async (req, res, next) => {
+    try {
+    const limit = req.query.limit
+    const skip= req.query.skip
+        const result = await AdminModel.get_emi_details_for_Admin(limit, skip)
+        const {rows,count}=result
+    if(rows.length>0 && count.length>0){
+        res.status(200).send({ emiDetails:rows,totalEMI:count})     
+    } 
+    } catch (err) {
+        console.log(err)
+        res.status(500).send({message:"Error while fatching emi details"})
+}
+    
+}
 
-// }
+exports.update_payment = async (req, res, next) => {
+    try {
+    const { loanID, installmentNo, payment } = req.body;
+        const result = await AdminModel.update_payment(loanID, installmentNo, payment);
+        console.log(result)
+        if (result) {
+            res.status(200).send({success:true,message:"payment details updated successfully"})
+        } else {
+           res.send({success:false,message:"payment details already updated"})  
+        }
+    } catch (err) {
+    console.log(err)
+   } 
+}

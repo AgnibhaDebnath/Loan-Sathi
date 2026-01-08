@@ -1,14 +1,23 @@
-const express=require("express")
+const express = require("express")
+require("dotenv").config();
 const { Server } =require("socket.io") 
 
 const http=require("http");
 const app = express();
 const ClintRouter = require("./Router/ClientRouter")
 const AdminRouter = require("./Router/AdminRouter");
- const cors= require("cors")
+
+
+
+require("./Cron")
+const cors= require("cors");
+
 app.use(cors())
+
 app.use(express.json());
 app.use(ClintRouter);
+
+
 app.use(AdminRouter);
 
 
@@ -30,6 +39,6 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT=3000
-server.listen(PORT, () => console.log(`Server running on http:localhost:${PORT}`))
+const port =process.env.PORT
+server.listen(port, () => console.log(`Server running on http:localhost:${port}`))
 
