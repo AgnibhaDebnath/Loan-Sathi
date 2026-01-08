@@ -5,7 +5,7 @@ import { Button } from "./ui/button"
 import { format } from "date-fns"
 import { CircleX, User, Phone, Loader, Info, Percent, Banknote, Hourglass, IdCard } from "lucide-react"
 import { Calendar as CalendarIcon } from "lucide-react";
-import formBackgroundImage from "../../../Frontend/assets/backround_borrower_lon_status.jpg"
+import formBackgroundImage from "../../src/assets/backround_borrower_lon_status.jpg"
 import { ToastContainer, toast } from 'react-toastify';
 import {
     Popover,
