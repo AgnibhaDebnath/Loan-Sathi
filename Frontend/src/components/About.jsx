@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import man from "../../../Frontend/assets/aboutSection.jpg"
+import man from "../../src/assets/aboutSection.jpg"
 import { ArrowRight } from "lucide-react";
 import { ModelContext } from "../Contaxt/ModelContext";
 import { useContext } from "react";
