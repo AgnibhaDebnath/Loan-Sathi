@@ -3,12 +3,12 @@ const Admin = require("firebase-admin")
 const serviceAccount = require("./loan-management-platform-750c5-firebase-adminsdk-fbsvc-35b48e95ad.json");
 Admin.initializeApp({
   credential: Admin.credential.cert(serviceAccount),
- projectId: process.env.PROJECT_ID, // ✅ your Project ID
+ projectId: process.env.PROJECT_ID,
 });
 exports.LoanApplyVerification  =async (req, res, next) => {
     const LoanData = req.body; 
     try {
-        const result = await Model.LoanFormSubmission(LoanData); // ✅ await added
+        const result = await Model.LoanFormSubmission(LoanData); 
         
             res.status(200).json(
                 {
