@@ -13,7 +13,7 @@ require("./Cron")
 const cors= require("cors");
 
 app.use(cors({
-  origin: "loan-sathi-agnibha2005.vercel.app",
+  origin: "https://loan-sathi-agnibha2005.vercel.app",
   methods: ["GET", "POST", "PUT", "DELETE"], 
   credentials: true
 }))
