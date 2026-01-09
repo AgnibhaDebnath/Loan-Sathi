@@ -7,8 +7,6 @@ import { useContext } from "react";
 const About = () => {
     const { isOpen, setIsOpen } = useContext(ModelContext)
 
-
-
     return (
         <>
             <section id="about" className="py-4">
