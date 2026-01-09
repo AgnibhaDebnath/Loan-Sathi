@@ -73,12 +73,12 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="borrower/LoanStatusSection" element={
+          <Route path="/borrower/LoanStatusSection" element={
             <ProtectedRoute>
               <LoanStatusSection />
             </ProtectedRoute>
           } />
-          <Route path="borrower/EMISection" element={
+          <Route path="/borrower/EMISection" element={
             <ProtectedRoute>
               <EmiSection />
             </ProtectedRoute>
