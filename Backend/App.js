@@ -12,7 +12,11 @@ const AdminRouter = require("./Router/AdminRouter");
 require("./Cron")
 const cors= require("cors");
 
-app.use(cors())
+app.use(cors({
+  origin: "loan-sathi-agnibha2005.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE"], 
+  credentials: true
+}))
 
 app.use(express.json());
 app.use(ClintRouter);
