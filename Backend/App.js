@@ -19,9 +19,10 @@ app.use(cors({
 }))
 
 app.use(express.json());
+app.use("/Uploads",express.static(path.join(__dirname,"/Uploads")))
 app.use(ClintRouter);
 
-app.use("/Uploads",express.static(path.join(__dirname,"/Uploads")))
+
 app.use(AdminRouter);
 
 
