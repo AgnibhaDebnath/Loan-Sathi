@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 Backend/Controller/loan-management-platform-750c5-firebase-adminsdk-fbsvc-35b48e95ad.json
-Backend/.env
+.env
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
