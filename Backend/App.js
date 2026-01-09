@@ -1,7 +1,7 @@
 const express = require("express")
 require("dotenv").config();
 const { Server } =require("socket.io") 
-
+const path=require("path")
 const http=require("http");
 const app = express();
 const ClintRouter = require("./Router/ClientRouter")
@@ -21,7 +21,7 @@ app.use(cors({
 app.use(express.json());
 app.use(ClintRouter);
 
-
+app.use("/Uploads",express.static(path.join(__dirname,"/Uploads")))
 app.use(AdminRouter);
 
 
