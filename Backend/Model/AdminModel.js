@@ -186,7 +186,7 @@ console.log(dueDate)
                            await connection.execute("UPDATE loan_details SET outstanding_principal=outstanding_principal - ? , total_outstanding = total_outstanding - ?,updated_at=? WHERE loan_id=? ", [principal_paid, payment, new Date(), loanID])
                            return true 
             } else {
-                return {success:"false",message:"payment details already updated"}
+                return {success:false,message:"payment details already updated"}
             }
 
             
@@ -198,7 +198,7 @@ console.log(dueDate)
                 await connection.execute("UPDATE loan_details SET outstanding_principal=outstanding_principal - ? , total_outstanding = total_outstanding - ?,updated_at=? WHERE loan_id=? ", [principal_paid, emiAmount + penalty, new Date(), loanID])
                 return true
             } else {
-               return {success:"false",message:"payment details already updated"} 
+               return {success:false,message:"payment details already updated"} 
             }
         } else if (new Date(dueDate).getTime() > new Date().getTime() && payment >= (emiAmount + penalty)) {
             const[emiUpdate] = await connection.execute("UPDATE emi_schedule_for_borrower SET amount_paid=?,payment_date=? WHERE loan_id=? AND installment_no=? AND amount_paid=0.00", [payment, new Date(), loanID, installmentNo])
@@ -208,7 +208,7 @@ console.log(dueDate)
             await connection.execute("UPDATE emi_schedule_for_borrower SET outstanding_added=? WHERE loan_id=? AND installment_no=?",["true",loanID,installmentNo])
              return  true    
             } else {
-                       return {success:"false",message:"payment details already updated"} 
+                       return {success:false,message:"payment details already updated"} 
             }
 
             }
