@@ -189,14 +189,18 @@ const update_payment = async (loanID, installmentNo, payment) => {
             await connection.execute("UPDATE loan_details SET outstanding_principal=outstanding_principal - ? , total_outstanding = total_outstanding - ?,updated_at=? WHERE loan_id=? ", [principal_paid, emiAmount + penalty, new Date(), loanID])
             
           return  true
-        } else if (new Date(dueDate).getTime() > new Date().getTime()) {
+        } else if (new Date(dueDate).getTime() > new Date().getTime() && payment>=(emiAmount + penalty)) {
             await connection.execute("UPDATE loan_details SET outstanding_principal=outstanding_principal - ? ,updated_at=? WHERE loan_id=? ", [principal_paid, new Date(), loanID])
 
-            await  await connection.execute("UPDATE emi_schedule_for_borrower SET outstanding_added=? WHERE loan_id=?",["true",loanID])
+            await connection.execute("UPDATE emi_schedule_for_borrower SET outstanding_added=? WHERE loan_id=?",["true",loanID])
           return  true  
             }
+        else {
+            return { seccess: false, message: "You can not add partial payment before due date" }
+}
+
         } else {
-            return false
+            return  { seccess: false, message: "payment details already updated" }
             }
     
     } catch (err) {
