@@ -1,9 +1,11 @@
 const Model = require("../Model/ClintModel")
 const Admin = require("firebase-admin")
-const serviceAccount = require("./loan-management-platform-750c5-firebase-adminsdk-fbsvc-35b48e95ad.json");
 Admin.initializeApp({
-  credential: Admin.credential.cert(serviceAccount),
- projectId: process.env.PROJECT_ID,
+    credential: Admin.credential.cert({
+        projectId: process.env.PROJECT_ID,
+        clientEmail: process.env.client_email,
+        privateKey: process.env.private_key.replace(/\\n/g, '\n'),
+    }),
 });
 exports.LoanApplyVerification  =async (req, res, next) => {
     const LoanData = req.body; 
