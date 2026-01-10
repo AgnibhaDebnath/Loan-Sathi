@@ -166,22 +166,38 @@ const get_emi_details_for_Admin = async (limit, skip) => {
 }
 const update_payment = async (loanID, installmentNo, payment) => {
     try {
-        
    
-    const [emiData] = await connection.execute("SELECT outstanding_principal,interest_rate FROM loan_details WHERE loan_id=?", [loanID])
-    const [penaltyDate] = await connection.execute("SELECT penalty FROM emi_schedule_for_borrower WHERE loan_id=? AND installment_no=?", [loanID, installmentNo])
-    const penalty = penaltyDate[0]?.penalty;
-        const outstanding_principal = emiData[0]?.outstanding_principal;
-        const annual_rate = emiData[0]?.interest_rate;
+        const [loanData] = await connection.execute("SELECT outstanding_principal,interest_rate,emi_amount FROM loan_details WHERE loan_id=?", [loanID])
+        const emiAmount=parseFloat(loanData[0]?.emi_amount) 
+        const [emiData] = await connection.execute("SELECT penalty,due_date FROM emi_schedule_for_borrower WHERE loan_id=? AND installment_no=?", [loanID, installmentNo])
+        const penalty = parseFloat(emiData[0]?.penalty);
+        const dueDate = emiData[0]?.due_date;
+
+        const outstanding_principal = loanData[0]?.outstanding_principal;
+        const annual_rate = loanData[0]?.interest_rate;
         const monthlyInterest = parseFloat(outstanding_principal) * (annual_rate / 12 / 100);
     
         const principal_paid = Math.max(0, parseFloat(payment) - monthlyInterest - parseFloat(penalty));
     
         const [emiUpdate] = await connection.execute("UPDATE emi_schedule_for_borrower SET amount_paid=?,payment_date=? WHERE loan_id=? AND installment_no=? AND amount_paid=0.00", [payment, new Date(), loanID, installmentNo])
         if (emiUpdate.affectedRows > 0) {
-            const [loanUpdate] = await connection.execute("UPDATE loan_details SET outstanding_principal=outstanding_principal - ? , total_outstanding = total_outstanding - ?,updated_at=? WHERE loan_id=? ", [principal_paid, payment, new Date(), loanID])
+    
+        if (new Date(dueDate).getTime() <new Date().getTime() && payment<=(emiAmount + penalty)) {
+            await connection.execute("UPDATE loan_details SET outstanding_principal=outstanding_principal - ? , total_outstanding = total_outstanding - ?,updated_at=? WHERE loan_id=? ", [principal_paid, payment, new Date(), loanID])
           return  true
-        }
+        } else if (new Date(dueDate).getTime() < new Date().getTime() && payment > (emiAmount + penalty)) {
+            await connection.execute("UPDATE loan_details SET outstanding_principal=outstanding_principal - ? , total_outstanding = total_outstanding - ?,updated_at=? WHERE loan_id=? ", [principal_paid, emiAmount + penalty, new Date(), loanID])
+            
+          return  true
+        } else if (new Date(dueDate).getTime() > new Date().getTime()) {
+            await connection.execute("UPDATE loan_details SET outstanding_principal=outstanding_principal - ? ,updated_at=? WHERE loan_id=? ", [principal_paid, new Date(), loanID])
+
+            await  await connection.execute("UPDATE emi_schedule_for_borrower SET outstanding_added=? WHERE loan_id=?",["true",loanID])
+          return  true  
+            }
+        } else {
+            return false
+            }
     
     } catch (err) {
         console.log(err);
