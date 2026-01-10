@@ -179,31 +179,43 @@ console.log(dueDate)
     
         const principal_paid = Math.max(0, parseFloat(payment) - monthlyInterest - parseFloat(penalty));
     
-        const [emiUpdate] = await connection.execute("UPDATE emi_schedule_for_borrower SET amount_paid=?,payment_date=? WHERE loan_id=? AND installment_no=? AND amount_paid=0.00", [payment, new Date(), loanID, installmentNo])
-        if (emiUpdate.affectedRows > 0) {
-    
-        if (new Date(dueDate).getTime() <new Date().getTime() && payment<=(emiAmount + penalty)) {
-            await connection.execute("UPDATE loan_details SET outstanding_principal=outstanding_principal - ? , total_outstanding = total_outstanding - ?,updated_at=? WHERE loan_id=? ", [principal_paid, payment, new Date(), loanID])
-          return  true
-        } else if (new Date(dueDate).getTime() < new Date().getTime() && payment > (emiAmount + penalty)) {
-            await connection.execute("UPDATE loan_details SET outstanding_principal=outstanding_principal - ? , total_outstanding = total_outstanding - ?,updated_at=? WHERE loan_id=? ", [principal_paid, emiAmount + penalty, new Date(), loanID])
+       
+        if (new Date(dueDate).getTime() < new Date().getTime() && payment <= (emiAmount + penalty)) {
+            const [emiUpdate] = await connection.execute("UPDATE emi_schedule_for_borrower SET amount_paid=?,payment_date=? WHERE loan_id=? AND installment_no=? AND amount_paid=0.00", [payment, new Date(), loanID, installmentNo])
+            if (emiUpdate.affectedRows > 0) {
+                           await connection.execute("UPDATE loan_details SET outstanding_principal=outstanding_principal - ? , total_outstanding = total_outstanding - ?,updated_at=? WHERE loan_id=? ", [principal_paid, payment, new Date(), loanID])
+                           return true 
+            } else {
+                return {success:"false",message:"payment details already updated"}
+            }
+
             
-          return  true
+            
+            
+        } else if (new Date(dueDate).getTime() < new Date().getTime() && payment > (emiAmount + penalty)) {
+            const [emiUpdate] = await connection.execute("UPDATE emi_schedule_for_borrower SET amount_paid=?,payment_date=? WHERE loan_id=? AND installment_no=? AND amount_paid=0.00", [payment, new Date(), loanID, installmentNo])
+            if (emiUpdate.affectedRows > 0) {
+                await connection.execute("UPDATE loan_details SET outstanding_principal=outstanding_principal - ? , total_outstanding = total_outstanding - ?,updated_at=? WHERE loan_id=? ", [principal_paid, emiAmount + penalty, new Date(), loanID])
+                return true
+            } else {
+               return {success:"false",message:"payment details already updated"} 
+            }
         } else if (new Date(dueDate).getTime() > new Date().getTime() && payment >= (emiAmount + penalty)) {
-            console.log("Third")
-            await connection.execute("UPDATE loan_details SET outstanding_principal=outstanding_principal - ? ,updated_at=? WHERE loan_id=? ", [principal_paid, new Date(), loanID])
+            const[emiUpdate] = await connection.execute("UPDATE emi_schedule_for_borrower SET amount_paid=?,payment_date=? WHERE loan_id=? AND installment_no=? AND amount_paid=0.00", [payment, new Date(), loanID, installmentNo])
+            if (emiUpdate.affectedRows > 0) {
+             await connection.execute("UPDATE loan_details SET outstanding_principal=outstanding_principal - ? ,updated_at=? WHERE loan_id=? ", [principal_paid, new Date(), loanID])
 
             await connection.execute("UPDATE emi_schedule_for_borrower SET outstanding_added=? WHERE loan_id=? AND installment_no=?",["true",loanID,installmentNo])
-          return  true  
+             return  true    
+            } else {
+                       return {success:"false",message:"payment details already updated"} 
+            }
+
             }
         else {
             return { seccess: false, message: "You can not add partial payment before due date" }
 }
 
-        } else {
-            return  { seccess: false, message: "payment details already updated" }
-            }
-    
     } catch (err) {
         console.log(err);
     
