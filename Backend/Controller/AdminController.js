@@ -262,11 +262,11 @@ exports.update_payment = async (req, res, next) => {
     try {
     const { loanID, installmentNo, payment } = req.body;
         const result = await AdminModel.update_payment(loanID, installmentNo, payment);
-        console.log(result)
-        if (result) {
+        const { success, message } = result;
+        if (success) {
             res.status(200).send({success:true,message:"payment details updated successfully"})
         } else {
-           res.send({success:false,message:"payment details already updated"})  
+           res.send({success:false,message:message})  
         }
     } catch (err) {
     console.log(err)
