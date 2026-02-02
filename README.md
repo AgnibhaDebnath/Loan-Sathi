@@ -1,4 +1,7 @@
+
 # Loan Management Platform 🚀
+<img width="1905" height="911" alt="Screenshot 2026-01-15 112300" src="https://github.com/user-attachments/assets/938109ea-90e3-4314-9a04-149e87cd3d18" />
+
 
 ## Description
 The Loan Management Platform is a full-stack web application designed to manage real-world loan workflows efficiently.  
@@ -24,11 +27,16 @@ Admins can:
 - Add new borrowers
 - Create and manage loan details
 - Track and manage borrower payments
+<img width="1891" height="460" alt="Screenshot 2026-01-15 112750" src="https://github.com/user-attachments/assets/85ff9eb2-b69d-44be-a33c-232f23ad7ab7" />
+<img width="1900" height="909" alt="Screenshot 2026-01-15 115438" src="https://github.com/user-attachments/assets/cf3ef4ee-6fe4-473e-ba56-de4e3d016e43" />
+
 
 ### 👤 Borrower Dashboard
 Borrowers can:
 - Securely view loan details
 - Check EMI schedules and payment status
+  
+<img width="1905" height="912" alt="Screenshot 2026-01-15 114923" src="https://github.com/user-attachments/assets/fa0457c8-1ca9-45b2-a272-9ca6a187e61a" />
 
 ---
 
