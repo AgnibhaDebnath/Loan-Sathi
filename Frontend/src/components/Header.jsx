@@ -103,7 +103,7 @@ const Header = () => {
 
                 <button
                     onClick={scrollLeft}
-                    className="bg-gray-300 border-gray-500 border-r-2 p-2 sm:p-2.5 rounded-l-full z-[200] min-[900px]:hidden"
+                    className="bg-gray-300  p-2  rounded-l-full z-[200] min-[900px]:hidden"
                 >
                     <ChevronLeft size={20} />
                 </button>
@@ -191,7 +191,7 @@ const Header = () => {
                 </div>
                 <button
                     onClick={scrollRight}
-                    className="bg-gray-300 p-2 border-gray-500 border-l-2  sm:p-2.5 rounded-r-full z-60 min-[900px]:hidden"
+                    className="bg-gray-300 p-2  rounded-r-full z-60 min-[900px]:hidden"
                 >
                     <ChevronRight size={20} />
                 </button>
