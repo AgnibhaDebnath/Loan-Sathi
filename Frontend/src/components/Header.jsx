@@ -67,42 +67,51 @@ const Header = () => {
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
+
+
     return (
 
-        <header className="sticky brightness-125 z-50 top-0 bg-gradient-to-r from-emerald-700 via-green-100 to-green-600">
-            {isWideScreen &&
-                <div className=' font-extrabold flex items-center py-2 px-3  gap-2 '>
+        <header className="sticky brightness-125 z-50 top-0 bg-gradient-to-r from-emerald-700 via-green-300 to-green-600">
+
+            <div className='font-bold flex items-center justify-between py-2 px-3  gap-2 '>
+                <div className='flex gap-5 w-10/12 min-[539px]:w-1/2'>
                     <div className='h-12 w-12 rounded-full bg-white flex justify-center items-center'>
                         <  Handshake color='blue' />
 
                     </div>
-                    <a className={`${currentLanguage == "en" ? "text-3xl inline-block font-[poppins]" : "font-bengali text-4xl"}  text-white  `} href="/"><span  >{text.app_name}</span></a>
-                    <div className="min-[1230px]:w-10/12 w-9/12 flex items-center justify-end gap-3">
-                        <Globe className="h-5 w-5 text-white opacity-80" aria-hidden="true" />
-                        <button onClick={changeLanguage}
-                            type="button"
-                            className="rounded-full border border-white/20 bg-white/5 px-4 py-2 text-base text-gray-200 shadow-sm backdrop-blur
-               transition-colors hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-cyan-400/60"
-                        >
-                            <span className={`${currentLanguage == "en" ? "font-bengali text-[1.3rem]" : "font-[poppins] font-semibold "}`}>{currentLanguage === "en" ? "বাংলা" : "English"}</span>
-                        </button>
+                    <div className='w-52'>
+                        <a className={` ${currentLanguage == "en" ? "text-3xl min-[539px]:text-4xl inline-block " : "font-bengali text-4xl"}  text-white  `} href="/"><span  >{text.app_name}</span></a>
                     </div>
-
                 </div>
-            }
+
+                {isWideScreen && <div className="min-[1230px]:w-10/12 w-9/12 flex items-center justify-end gap-3">
+                    <Globe className="h-5 w-5 text-white opacity-80" aria-hidden="true" />
+                    <button onClick={changeLanguage}
+                        type="button"
+                        className="rounded-full border border-white/20 bg-white/5 px-4 py-2 text-base text-gray-200 shadow-sm backdrop-blur
+               transition-colors hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-cyan-400/60"
+                    >
+                        <span className={`${currentLanguage == "en" ? "font-bengali text-[1.3rem]" : " font-semibold "}`}>{currentLanguage === "en" ? "বাংলা" : "English"}</span>
+                    </button>
+                </div>}
+
+            </div>
+
+
             <nav className="w-full flex justify-center items-center py-2  ">
+
 
                 <button
                     onClick={scrollLeft}
-                    className="bg-gray-100 p-2 sm:p-2.5 rounded-l-full z-10 min-[1085px]:hidden"
+                    className="bg-gray-300 border-gray-500 border-r-2 p-2 sm:p-2.5 rounded-l-full z-[200] min-[900px]:hidden"
                 >
                     <ChevronLeft size={20} />
                 </button>
-                <div className='min-[1085px]:p-[3px] sm:bg-gradient-to-r from-white via-yellow-400 to-white w-2/3 flex min-[1085px]:rounded-full justify-center animate-shine bg-[length:200%_200%]'>
-                    <div ref={navRef} className="justify-evenly py-2 flex w-full items-center bg-white min-[1085px]:rounded-full scrollbar-hide whitespace-nowrap overflow-x-auto">
-                        <ul className="flex flex-row items-center">
+                <div className='min-[900px]:p-[3px] min-[900px]:bg-gradient-to-r from-white via-yellow-400 to-white w-2/3 flex min-[900px]:rounded-full justify-center animate-shine bg-[length:200%_200%]'>
+                    <div ref={navRef} className="justify-center py-2 flex w-full items-center bg-white min-[900px]:rounded-full scrollbar-hide whitespace-nowrap overflow-x-auto">
+                        <ul className="flex flex-row justify-evenly w-full lg:w-auto">
                             {Links.map((link, index) =>
-                                <li key={index} className={`px-2 sm:px-2 md:px-3 lg:px-5 font-semibold text-sm sm:text-base hover:text-green-400 hover:scale-105 ${currentLanguage == "en" ? "font-[poppins]" : "font-bengali text-gray-700"} transition duration-200`}>
+                                <li key={index} className={`px-2 sm:px-2 md:px-3 lg:px-5 font-semibold text-sm sm:text-base hover:text-green-400 hover:scale-105 ${currentLanguage == "en" ? "" : "font-bengali text-gray-700"} transition duration-200`}>
                                     {link.buttonName ? (
                                         (() => {
                                             switch (link.buttonName) {
@@ -182,7 +191,7 @@ const Header = () => {
                 </div>
                 <button
                     onClick={scrollRight}
-                    className="bg-gray-100 p-2 sm:p-2.5 rounded-r-full z-60 min-[1085px]:hidden"
+                    className="bg-gray-300 p-2 border-gray-500 border-l-2  sm:p-2.5 rounded-r-full z-60 min-[900px]:hidden"
                 >
                     <ChevronRight size={20} />
                 </button>
