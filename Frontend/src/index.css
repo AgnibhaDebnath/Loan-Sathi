@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@keyframes shine {
+        
+          0%{ 'background-position':100% ;}
+          100% { 'background-position':-100%; }
+		  
+}
+@keyframes borderShine {
+      0%: { backgroundPosition: 0% 50% ;}
+      100%: { backgroundPosition: 100% 50% ;}
+		  }
+	@keyframes	greenpulse {
+			  0%: { boxShadow: '0 0 0 rgba(0, 255, 0, 0.4)' }
+			  50%: { boxShadow: 0 0 20px 10px rgba(0, 255, 0, 0.3) }
+			  100% :{ boxShadow: 0 0 0 rgba(0, 255, 0, 0.4) }
+		}
+	
+    
+.animate-shine {
+  animation: shine 4s linear infinite;
+}
+.animate-borderShine {
+  animation: borderShine 3s linear infinite;
+}
+.animate-greenpulse {
+  animation: greenpulse 2s infinite;
+}
+
+@theme {
+  --font-noto: "Noto Sans", sans-serif;
+  --font-bengali: "Noto Sans Bengali", sans-serif;
+}
+
+.font-noto {
+  font-family: var(--font-noto);
+}
+
+.font-bengali {
+  font-family: var(--font-bengali);
+}
