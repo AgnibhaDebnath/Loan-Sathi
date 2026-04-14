@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import money from "../../src/assets/heroSection.jpg"
+
+import money from "@/assets/heroSection.jpg"
 import { ArrowRight } from 'lucide-react';
 import { ModelContext } from "../Contaxt/ModelContext";
 import { useContext } from "react";
@@ -23,7 +23,7 @@ const HeroSection = () => {
                 />
 
 
-                <div className="absolute inset-0 bg-black bg-opacity-50 ">
+                <div className="absolute inset-0 bg-black/50  ">
 
 
                     <div className="relative z-10 flex flex-col justify-center items-center h-full text-center text-white">
@@ -37,7 +37,7 @@ const HeroSection = () => {
                             />
                         </div>
 
-                        <p className={`text-lg mb-6  ${currentLanguage == "en" ? "font-[poppins] font-semibold" : 'font-bengali text-xl'}`}>{text.home.hero_subtitle}</p>
+                        <p className={`text-lg mb-6  ${currentLanguage == "en" ? "font-semibold" : 'font-bengali text-xl'}`}>{text.home.hero_subtitle}</p>
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger >
@@ -47,12 +47,12 @@ const HeroSection = () => {
                                         } else {
                                             setIsOpen(!isOpen)
                                         }
-                                    }} className={`bg-gradient-to-r from-green-500 to-emerald-500 px-4 py-1.5 rounded-lg   gap-2  flex flex-row items-center hover:scale-105 transition duration-200 ${currentLanguage == "en" ? "font-[poppins] font-semibold" : "font-bengali font-semibold"}`}>
+                                    }} className={`bg-linear-to-r from-green-500 to-emerald-500 px-4 py-1.5 rounded-lg   gap-2  flex flex-row items-center hover:scale-105 transition duration-200  cursor-pointer ${currentLanguage == "en" ? " font-semibold" : "font-bengali font-semibold"}`}>
                                         {text.home.CTA}
                                         <ArrowRight size={20} strokeWidth={3} />
                                     </button>
                                     <TooltipContent className="font-medium px-4 py-3 hidden md:block">
-                                        <p>Click to start you loan application</p>
+                                        <p className="bg-black py-2.5 text-white rounded-lg px-4">Click to start you loan application</p>
                                         <TooltipArrow></TooltipArrow>
                                     </TooltipContent>
                                 </TooltipTrigger>
