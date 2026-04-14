@@ -6,14 +6,17 @@ const http=require("http");
 const app = express();
 const ClintRouter = require("./Router/ClientRouter")
 const AdminRouter = require("./Router/AdminRouter");
-
+const AuthRouter=require("./Router/authRouter")
 
 
 require("./Cron")
 const cors= require("cors");
 
 app.use(cors({
-  origin: "https://loan-sathi-agnibha2005.vercel.app",
+    origin: [
+    "http://localhost:5173",
+    "https://loan-sathi-agnibha192005.vercel.app"
+  ],
   methods: ["GET", "POST", "PUT", "DELETE"], 
   credentials: true
 }))
@@ -22,7 +25,7 @@ app.use(express.json());
 app.use("/Uploads",express.static(path.join(__dirname,"/Uploads")))
 app.use(ClintRouter);
 
-
+app.use(AuthRouter)
 app.use(AdminRouter);
 
 
