@@ -2,6 +2,6 @@ const express = require("express")
 const AuthRouter = express.Router();
 const AuthController=require("../Controller/authController")
 
-AuthRouter.post("/signup", AuthController.signUp);
-
+AuthRouter.post("/api/auth/signup", AuthController.SignUp);
+AuthRouter.post("/api/auth/Login",AuthController.Login)
 module.exports = AuthRouter;
