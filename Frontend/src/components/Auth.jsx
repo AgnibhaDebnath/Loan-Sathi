@@ -1,194 +1,53 @@
 import { ModelContext } from "@/Contaxt/ModelContext";
 import { useContext, useState } from "react";
 import { Input } from "./ui/input";
-import { X, CircleX, TriangleAlert } from "lucide-react";
+import { X, CircleX, CircleCheck, TriangleAlert, Eye, EyeOff } from "lucide-react";
+
 import { Button } from "./ui/button";
 import { toast, ToastContainer } from "react-toastify";
-import { auth } from "../Firebase/firebaseConfig";
-import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
+
 import { Spinner } from "@/components/ui/spinner"
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 const AdminLogin = () => {
-    const navigate = useNavigate()
-    const { LoginFormOpen, setLoginFormOpen } = useContext(ModelContext)
-    const [mobileNo, setMobileNO] = useState("")
 
+
+    const { isAuthOpen, setIsAuthOpen } = useContext(ModelContext)
     const [password, setPassword] = useState("")
-
-
-    const [adminName, setAdminName] = useState("")
-    const [error, setError] = useState({ adminNameError: "", mobileNoError: "", passwordError: "", mobileNoORNameMismatchError: "", passwordMismatchError: "" })
-    const [validMobileNo, setValidMobileNo] = useState(false)
-    const [confirmationResult, setconfirmationResult] = useState()
-    const [OTPSend, setOTPSend] = useState(false)
-    const [otp, setotp] = useState('')
-    const [validOTP, setValidOTP] = useState(true)
+    const [email, setEmail] = useState("")
+    const [error, setError] = useState({ NameError: "", EmailError: "", PasswordError: "" })
     const [formSubmit, setFormSubmit] = useState(false)
-    const setupRecaptcha = () => {
-        try {
-            if (!window.recaptchaVerifier) {
-                window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
-                    size: "invisible",
-                    callback: () => console.log("reCAPTCHA verified ✅"),
-                });
-
-                window.recaptchaVerifier.render().then((widgetId) => {
-                    window.recaptchaWidgetId = widgetId;
-                });
-            } else {
-                // ✅ Reset existing widget if already rendered
-                window.grecaptcha.reset(window.recaptchaWidgetId);
-            }
-        } catch (err) {
-            toast.error(err.message, {
-                position: "top-center",
-                theme: "light",
-                autoClose: 5000
-            })
-            setFormSubmit(false)
-        }
-    };
-
-    const verifyOtp = async () => {
-        try {
-            const result = await confirmationResult.confirm(otp);
-            const user = result.user;
-            const token = await user.getIdToken()
-            const res = await fetch("http://localhost:3000/api/admin-login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                }
-            })
-            const data = await res.json()
-            const { message } = data
-            console.log(res.ok)
-            if (res.ok) {
-                setOTPSend(false)
-                setotp('')
-                setValidOTP(true)
-                localStorage.setItem("token", token);
-                toast.success(message, {
-                    toastId: "otpSuccess",
-                    theme: "light",
-                    position: "top-center",
-                    autoClose: 5000
-                })
-
-                navigate("/admin")
-
-
-
-            }
-            else if (res.status == 500) {
-                toast.error(message, {
-                    toastId: "otpError500",
-                    theme: "light",
-                    position: "top-center",
-                    autoClose: 5000
-                })
-            } else if (res.status == 404) {
-                toast.error(message, {
-                    toastId: "otpError404",
-                    theme: "light",
-                    position: "top-center",
-                    autoClose: 5000
-                })
-            }
-        } catch (err) {
-            console.log(err);
-            setValidOTP(false)
-        }
-    };
-
-
+    const [validPassword, setValidPassword] = useState(false)
+    const [name, setName] = useState("")
+    const [showPassword, setShowPassword] = useState(false)
+    const { authMode, setAuthMode } = useContext(ModelContext)
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setFormSubmit(true)
-        try {
-            const res = await fetch("http://localhost:3000/verify-admin-mobileNo", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ adminName, mobileNo })
-            })
-
-            const data = await res.json()
-            const { success, message, error } = data
-            if (!res.ok || !success) {
-                setFormSubmit(false)
-                setError(prev => ({ ...prev, mobileNoORNameMismatchError: message }))
-                toast.error(error, {
-                    theme: "light",
-                    position: "top-center",
-                    autoClose: 5000
-                })
-                return
-            } else {
-                setError(prev => ({ ...prev, mobileNoORNameMismatchError: "" }))
-                const responce = await fetch("http://localhost:3000/verify-password", {
+        e.PreventDefault()
+        const BASE_URL = "https://loan-sathi.onrender.com";
+        if (authMode == "Sign Up") {
+            try {
+                const res = await fetch(`${BASE_URL}/signup`, {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
+                        "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ password, mobileNo })
-
+                    body: JSON.stringify({ UserName: name.trim(), Email: email, Password: password, })
                 })
-                const responceData = await responce.json()
-                console.log(responceData)
-                const { verify, inform, error } = responceData
-                console.log(error)
-                if (!responce.ok || !verify) {
-                    setError(prev => ({ ...prev, passwordMismatchError: inform }))
-                    toast.error(error, {
-                        theme: "light",
-                        position: "top-center",
-                        autoClose: 5000
-                    })
-                    return
-                } else {
-                    setError(prev => ({ ...prev, passwordMismatchError: "" }))
-                    toast.success("All credentials verified", {
-                        autoClose: 5000,
-                        theme: "light",
-                        position: "top-center"
-                    })
-
-                    setupRecaptcha()
-                    const phoneNumber = '+91' + mobileNo;
-                    const appVerifier = window.recaptchaVerifier;
-                    try {
-                        const result = await signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-                        setconfirmationResult(result)
-                        window.confirmationResult = result
-                        setOTPSend(true)
-
-                    } catch (err) {
-                        toast.error(err.message, {
-                            theme: "light",
-                            position: "top-center",
-                            autoClose: 5000
-                        })
-
-                    } finally {
-                        setFormSubmit(false)
-
-                    }
-                }
+            } catch (err) {
+                console.log(err);
             }
+        } else {
+            try {
 
-        } catch (err) {
-            console.log(err)
-        } finally {
-            setFormSubmit(false)
+
+                const res = await fetch(`${BASE_URL}/login`, {
+                    method: "POST"
+                })
+            } catch (err) {
+                console.log(err)
+            }
         }
-
-    };
-
+    }
     return (
         <>
             <ToastContainer
@@ -198,119 +57,107 @@ const AdminLogin = () => {
                 newestOnTop={true}
                 closeOnClick
                 pauseOnHover />
-            <div id="recaptcha-container" className="hidden"></div>
-            {LoginFormOpen && <div className="fixed top-20 md:top-36 left-1/2  transform -translate-x-1/2 w-4/5 sm:w-3/5 lg:w-2/5 bg-white p-5 rounded-2xl shadow-2xl z-40">
-                <div className="flex justify-end ">
-                    <button onClick={() => {
-                        setLoginFormOpen(!LoginFormOpen)
-                        setError("")
 
-                        setMobileNO("")
+            {isAuthOpen && <div className="fixed top-29 md:top-36 left-1/2  transform -translate-x-1/2 w-4/5 sm:w-3/5 lg:w-2/5 bg-white p-5 rounded-2xl shadow-2xl z-40">
+                <div className="flex justify-end ">
+                    <button className="cursor-pointer" onClick={() => {
+                        setIsAuthOpen(false)
+                        setError("")
                         setPassword("")
-                        setAdminName("")
+                        setEmail("")
+                        setName("")
                     }}>
                         <X />
                     </button>
                 </div>
-                <div className="flex justify-center my-2 py-2">
-                    <h1 className="text-center font-bold text-2xl sm:text-2xl md:text-3xl">Admin login from</h1>
-                </div>
-                {(error.mobileNoORNameMismatchError || error.passwordMismatchError) && <div className="my-2 flex justify-center  w-full">
-                    <div className=" py-3 border-2 rounded-2xl lg:w-4/6 w-4/5 md:w-3/5 flex justify-center flex-col items-center ">
-                        {error.mobileNoORNameMismatchError && <h3 className="text-red-500 font-semibold"><span>< TriangleAlert className="inline mr-1 mb-1" size={20} /></span>{error.mobileNoORNameMismatchError}</h3>}
-
-                        {error.passwordMismatchError && <h3 className="text-red-500 font-semibold"><span>< TriangleAlert className="inline mr-1 mb-1" size={20} /></span>{error.passwordMismatchError}</h3>}
-                    </div>
+                {authMode == "Sign Up" ? <div className="flex justify-center mb-2 ">
+                    <h1 className="text-center font-bold text-2xl sm:text-2xl md:text-3xl">Sign Up</h1>
+                </div> : <div className="flex justify-center mb-2 py-2">
+                    <h1 className="text-center font-bold text-2xl sm:text-2xl md:text-3xl">Login</h1>
                 </div>}
+                <div className="py-2 flex justify-center mb-3   ">
+                    <h1 className="text-gray-500 border-2 border-gray-500 px-10 min-[457px]:px-20 py-2 rounded-xl xl:px-32">All fields are required</h1>
+                </div>
                 <form onSubmit={handleSubmit}>
-                    <div className="flex flex-col items-center justify-center gap-2 text-base font-medium">
-                        <Input placeholder="Admin name"
+                    <div className="flex flex-col items-center justify-center gap-3 text-base font-medium">
+
+                        {authMode == "Sign Up" && <Input type="text" placeholder="Name" className="max-[450px]:w-60 lg:w-4/6 w-4/5 md:w-3/5 rounded-2xl pl-5 border border-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-600 bg-gray-50" value={name} onChange={e => {
+                            const value = e.target.value
+                            if (/^[A-Za-z\s]*$/.test(value)) {
+                                setName(value)
+                            }
+
+                        }} />}
+                        {(error.NameError) && <p className="text-red-500 text-sm"><span><CircleX size={20} className="inline mb-1 mr-1" /></span>{error.NameError}</p>}
+                        <Input type="text" placeholder="Email (e.g. name@gmail.com)"
+                            value={email}
                             onChange={e => {
-                                const onlyLetterAndSpace = e.target.value.replace(/[^a-zA-Z\s]/g, "")
-                                setAdminName(onlyLetterAndSpace)
-                                if (!onlyLetterAndSpace) {
-                                    setError(prev => ({ ...prev, adminNameError: "Admin name is required" }))
+                                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                                const Email = e.target.value
+                                setEmail(Email)
+                                if (emailRegex.test(Email)) {
+                                    setError((prev) => ({ ...prev, EmailError: "" }));
                                 } else {
-                                    setError(prev => ({ ...prev, adminNameError: "" }))
+                                    setError((prev) => ({ ...prev, EmailError: "Invalid email format" }))
                                 }
                             }}
-                            value={adminName}
-                            className="lg:w-4/6 w-4/5 md:w-3/5 rounded-2xl" />
-                        {error.adminNameError && <p className="text-red-500"><span><CircleX size={20} className="inline mb-1" /></span>{error.adminNameError}</p>}
 
-                        <Input placeholder="Mobile no"
-                            type="text"
-                            onChange={e => {
-                                const onlyDigits = e.target.value.replace(/\D/g, "")
-                                setMobileNO(onlyDigits)
-                                if (!onlyDigits) {
-                                    setError(prev => ({ ...prev, mobileNoError: "Mobile no is required" }))
-                                }
-                                else if (onlyDigits.length !== 10) {
-                                    setError(prev => ({ ...prev, mobileNoError: "Mobile no must be exact 10 digits" }))
-                                    setValidMobileNo(false)
-                                }
-                                else {
-                                    setError(prev => ({ ...prev, mobileNoError: "" }))
-                                    setValidMobileNo(true)
-                                }
-                            }}
-                            value={mobileNo}
-                            className="lg:w-4/6 w-4/5 md:w-3/5 rounded-2xl" />
-                        {error.mobileNoError && <p className="text-red-500 lg:w-4/6 w-4/5 md:w-3/5"><span className=""><CircleX size={20} className="inline mb-1" /></span><span className="">{error.mobileNoError}</span></p>}
+                            className="max-[450px]:w-60 lg:w-4/6 w-4/5 md:w-3/5 rounded-2xl pl-5 border border-gray-400 shadow-sm text-[0.9rem] focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-600 bg-gray-50" />
+                        {(email && error.EmailError) && <p className="text-red-500 text-sm"><span><CircleX size={20} className="inline mb-1 mr-1" /></span>{error.EmailError}</p>}
+                        <div className="relative max-[450px]:w-60 lg:w-4/6 w-4/5 md:w-3/5 ">
+                            <Input placeholder="Password"
+                                type={`${showPassword ? "text" : "password"}`}
+                                onChange={e => {
+                                    const password_value = e.target.value;
+                                    setPassword(password_value)
+                                    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[^\s]{8,}$/;
 
-                        <Input placeholder=" Password"
-                            type="password"
-                            onChange={e => {
-                                const password = e.target.value;
-                                setPassword(password)
-                                if (!password) {
-                                    setError(prev => ({ ...prev, passwordError: "Password is required" }))
-                                } else {
-                                    setError(prev => ({ ...prev, passwordError: "" }))
-                                }
+                                    if (/\s/.test(password_value)) {
+                                        setError((prev) => ({
+                                            ...prev,
+                                            PasswordError: "Password cannot contain spaces"
+                                        }));
+                                        setValidPassword(false);
+                                    }
+                                    else if (!passwordRegex.test(password_value)) {
+                                        setValidPassword(false);
+                                    }
+                                    else {
+                                        setError(prev => ({ ...prev, PasswordError: "" }));
+                                        setValidPassword(true);
+                                    }
+                                }}
+                                value={password}
+                                className=" rounded-2xl pl-5 border border-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-600 bg-gray-50" />
+                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1.5 cursor-pointer">{showPassword ? <EyeOff size={22} /> : <Eye />}</button>
+                        </div>
+                        {(password && error.PasswordError) && <p className="text-red-500 text-sm"><span><CircleX size={20} className="inline mb-1 mr-1" /></span>{error.PasswordError}</p>}
+                        {authMode == "Sign Up" && <ul className="text-xs mt-2 space-y-0.5">
+                            <li className={password.length >= 8 ? "text-green-500" : "text-gray-400"}>
+                                <CircleCheck className="inline mb-0.5" size={15} /> At least 8 characters
+                            </li>
+                            <li className={/[A-Z]/.test(password) ? "text-green-500" : "text-gray-400"}>
+                                <CircleCheck className="inline mb-0.5" size={15} /> At least One uppercase letter
+                            </li>
+                            <li className={/[a-z]/.test(password) ? "text-green-500" : "text-gray-400"}>
+                                <CircleCheck className="inline mb-0.5" size={15} /> At least One lowercase letter
+                            </li>
+                            <li className={/\d/.test(password) ? "text-green-500" : "text-gray-400"}>
+                                <CircleCheck className="inline mb-0.5" size={15} /> At least One number
+                            </li>
+                            <li className={/[!@#$%^&*]/.test(password) ? "text-green-500" : "text-gray-400"}>
+                                <CircleCheck className="inline mb-0.5" size={15} /> At least One special character
+                            </li>
+                        </ul>}
 
-                            }}
-                            value={password}
-                            className="lg:w-4/6 w-4/5 md:w-3/5 rounded-2xl" />
-                        {error.passwordError && <p className="text-red-500"><span><CircleX size={20} className="inline mb-1" /></span>{error.passwordError}</p>}
-                        <Button disabled={!(adminName && mobileNo && password) || !validMobileNo} className="py-1 rounded-2xl px-9 bg-gradient-to-r text-white hover:scale-105 from-pink-600 to-red-500 transition duration-200">Verify</Button>
+                        <Button onClick={() => setFormSubmit(true)} disabled={!(authMode == "Login" && email && validPassword) && !(email && name && validPassword)} className={`py-1 rounded-2xl px-9  text-white hover:scale-105 transition duration-200 cursor-pointer  ${authMode == "Sign Up" ? "bg-green-600 hover:bg-green-700 hover:scale-105" : "bg-gray-200 text-gray-700"}`}>{authMode == "Sign Up" ? "Sign Up" : "Login"}</Button>
                     </div>
                 </form>
             </div>}
             {formSubmit && <div className="fixed inset-0  flex items-center justify-center bg-white/60 z-50">
                 <Spinner className="size-20" color="black" />
             </div>}
-            {OTPSend && <div className="fixed flex flex-col items-center justify-center gap-3 h-52 w-4/5 md:w-2/5 sm:w-1/2 top-32 left-1/2 transform -translate-x-1/2 bg-white  rounded-xl shadow-2xl z-50">
-                <div>
-                    <h1 className="font-medium  text-green-500">Vefify mobile number</h1>
-                </div>
-                <input
 
-                    maxlength={6}
-                    placeholder="Enter OTP"
-                    type="password"
-                    value={otp}
-                    onChange={e => {
-                        const onlyDigits = e.target.value.replace(/\D/g, "")
-                        setotp(onlyDigits)
-                    }}
-                    className="w-4/5 sm:w-4/5 md:w-3/5  tracking-widest px-4 py-2 border-b-2 border-b-gray-300  focus:outline-none focus:border-b-green-500 text-center shadow-sm text-base font-medium"
-                />
-                {!validOTP &&
-                    <div className="flex flex-row items-center gap-1">
-                        <CircleX color="red" />
-                        <p className="font-medium text-red-500">Enter valid otp</p>
-                    </div>
-                }
-                <button
-                    onClick={verifyOtp}
-                    disabled={otp.length !== 6}
-                    className="bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium px-3 py-2 rounded-lg hover:scale-x-105 transition duration-200 disabled:opacity-50"
-                >
-                    Verify OTP
-                </button>
-            </div>}
 
         </>
     )
