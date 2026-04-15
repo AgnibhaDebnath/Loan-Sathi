@@ -1,4 +1,4 @@
-const connection=require("../DB/db")
+// const connection=require("../DB/db")
 
 const getLoansWithEMIStartingToday = async (loanIDs) => { 
     try{

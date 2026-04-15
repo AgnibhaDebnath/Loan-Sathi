@@ -1,4 +1,4 @@
-const connection=require("../DB/db")
+// const connection=require("../DB/db")
 const add_next_emi_in_Borrower_EMI_Schedule = async (next_emis) => {
     try {
         

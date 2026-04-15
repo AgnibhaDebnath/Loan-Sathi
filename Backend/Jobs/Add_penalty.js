@@ -1,5 +1,5 @@
 const e = require("express")
-const connection=require("../DB/db")
+// const connection=require("../DB/db")
 
 
 const Add_penalty = async () => {

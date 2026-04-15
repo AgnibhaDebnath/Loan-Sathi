@@ -1,4 +1,4 @@
-const connection=require("../DB/db")
+// const connection=require("../DB/db")
 const get_loan_details_for_emi = async (loanIds) => {
     try {
     const placeholders = loanIds.map(() => "?").join(",")

@@ -1,4 +1,4 @@
-const connection=require("../DB/db")
+// const connection=require("../DB/db")
 
 const canAddEmi = async (loanID) => {
     const [loanDetails] = await connection.execute("SELECT outstanding_principal,total_outstanding FROM loan_details WHERE loan_id=?", [loanID])

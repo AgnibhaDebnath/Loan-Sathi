@@ -1,4 +1,4 @@
-const connection=require("../DB/db")
+// const connection=require("../DB/db")
 
 const check_last_emi_due_date = async () => {
     try {

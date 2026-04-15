@@ -1,4 +1,4 @@
-const connection=require("../DB/db")
+// const connection=require("../DB/db")
 const check_starting_date= async () => {
     try {
         const [rows] = await connection.execute("SELECT loan_id FROM loan_details WHERE starting_date=?", [new Date().toLocaleDateString("en-CA")])
