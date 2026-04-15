@@ -4,9 +4,11 @@ const { Server } =require("socket.io")
 const path=require("path")
 const http=require("http");
 const app = express();
-const ClintRouter = require("./Router/ClientRouter")
-const AdminRouter = require("./Router/AdminRouter");
-const AuthRouter=require("./Router/authRouter")
+const userRouter = require("./Router/userRouter")
+
+const adminRouter = require("./Router/adminRouter")
+
+const authRouter=require("./Router/authRouter")
 
 
 require("./Cron")
@@ -22,11 +24,13 @@ app.use(cors({
 }))
 
 app.use(express.json());
-app.use("/Uploads",express.static(path.join(__dirname,"/Uploads")))
-app.use(ClintRouter);
+app.use("/Uploads", express.static(path.join(__dirname, "/Uploads")))
 
-app.use(AuthRouter)
-app.use(AdminRouter);
+app.use(authRouter);
+app.use(userRouter);
+
+app.use(adminRouter)
+
 
 
 const server = http.createServer(app)
